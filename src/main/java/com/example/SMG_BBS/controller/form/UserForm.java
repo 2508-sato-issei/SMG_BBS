@@ -2,9 +2,7 @@ package com.example.SMG_BBS.controller.form;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.context.annotation.Primary;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter

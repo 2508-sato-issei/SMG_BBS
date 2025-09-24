@@ -6,6 +6,8 @@ import com.example.SMG_BBS.repository.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,5 +52,32 @@ public class UserService {
         results.add(userRepository.findById(id).orElse(null));
         List<UserForm> users = setUserForm(results);
         return users.get(0);
+    }
+
+    /*
+     * ユーザー復活・停止フラグの更新
+     */
+    public void saveUser(UserForm userForm) {
+        User user = setUserEntity(userForm);
+        userRepository.save(user);
+    }
+
+    private User setUserEntity(UserForm reqUser) {
+        User user = new User();
+        user.setAccount(reqUser.getAccount());
+        user.setName(reqUser.getName());
+        user.setPassword(reqUser.getPassword());
+        user.setBranchId(reqUser.getBranchId());
+        user.setDepartmentId(reqUser.getDepartmentId());
+        user.setIsStopped((byte)reqUser.getIsStopped());
+
+        // 新規登録と更新を区別する（id == null 新規 / id != null 更新）
+        if(reqUser.getId() != null) {
+            user.setId(reqUser.getId());
+            user.setUpdatedDate(Timestamp.valueOf(LocalDateTime.now()));
+        }
+        return user;
+
+
     }
 }

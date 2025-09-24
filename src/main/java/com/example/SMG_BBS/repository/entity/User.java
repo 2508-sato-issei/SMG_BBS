@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
-import java.time.LocalDate;
 
 @Entity
 @Table(name = "users")
@@ -34,12 +33,12 @@ public class User {
     private Integer departmentId;
 
     @Column
-    private int isStopped;
+    private byte isStopped;
 
-    @Column
+    @Column(insertable = false, updatable = false)
     private Timestamp createdDate;
 
-    @Column
-    private Timestamp updatedDate;
+    @Column(insertable = false, updatable = false)
+    private  Timestamp updatedDate;
 
 }

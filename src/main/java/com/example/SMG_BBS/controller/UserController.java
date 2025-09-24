@@ -2,16 +2,16 @@ package com.example.SMG_BBS.controller;
 
 import com.example.SMG_BBS.controller.form.UserForm;
 import com.example.SMG_BBS.service.UserService;
+import com.example.SMG_BBS.utils.CipherUtil;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class UserController {
         UserForm user = (UserForm) session.getAttribute("loginUser");
 
         // ログインユーザーの部署チェック（総務人事部(=1)以外ならエラー）
-        if(user.getDepartmentId() != 1){
+        if(user == null || user.getDepartmentId() != 1){
             List<String> errorMessages = new ArrayList<>();
             errorMessages.add("無効なアクセスです");
             redirectAttributes.addFlashAttribute("errorMessages",errorMessages);
@@ -43,7 +43,7 @@ public class UserController {
         List<UserForm> users = userService.findAll();
 
         // ユーザー管理画面表示
-        mav.setViewName("/manage");
+        mav.setViewName("/user");
         mav.addObject("users", users);
         return mav;
 
@@ -88,12 +88,37 @@ public class UserController {
     }
 
     /*
+     * ユーザー復活・停止機能
+     */
+    @PutMapping("/change/{id}")
+    public ModelAndView isStoppedChange(@PathVariable Integer id,
+                                        @RequestParam Integer isStopped) {
+        UserForm user = userService.findUser(id);
+        user.setIsStopped(isStopped);
+        userService.saveUser(user);
+
+        return new ModelAndView("redirect:/user");
+    }
+
+    /*
      * ユーザー編集処理
      */
     @PutMapping("/user/update/{id}")
     public ModelAndView updateUser(@PathVariable Integer id,
-                                   @ModelAttribute("formModel") UserForm userForm,
-                                   RedirectAttributes redirectAttributes) {
+                                   @ModelAttribute("formModel") UserForm userForm) {
+        // 既存のレコードを取得
+        UserForm user = userService.findUser(id);
+        // パスワードが入力されていない場合は既存レコードのパスワードをFormにセット
+        if(userForm.getPassword().isBlank()) {
+            userForm.setPassword(user.getPassword());
+        } else {
+            // パスワードを暗号化
+            String encPassword = CipherUtil.encrypt(userForm.getPassword());
+            userForm.setPassword(encPassword);
+        }
 
+        userService.saveUser(userForm);
+
+        return new ModelAndView("redirect:/user");
     }
 }
