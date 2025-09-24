@@ -15,7 +15,7 @@ public class Message {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column
     private String title;
@@ -26,12 +26,14 @@ public class Message {
     @Column
     private String category;
 
-    @Column
-    private int userId;
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
 
     @Column(insertable = false, updatable = false)
     private Timestamp createdDate;
 
     @Column(insertable = false, updatable = false)
     private Timestamp updatedDate;
+
 }
