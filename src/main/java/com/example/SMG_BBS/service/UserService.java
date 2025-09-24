@@ -18,6 +18,40 @@ public class UserService {
     UserRepository userRepository;
 
     /*
+     * レコード追加、ユーザー復活・停止フラグの更新
+     */
+    public void saveUser(UserForm reqUser) {
+        User saveUser = setUserEntity(reqUser);
+        userRepository.save(saveUser);
+    }
+
+    /*
+     * アカウント重複チェック用
+     */
+    public User selectUserByAccount(String account) {
+        return userRepository.findByAccount(account).orElse(null);
+    }
+
+    /*
+     * リクエストから取得した情報をentityに設定
+     */
+    private User setUserEntity(UserForm reqUser) {
+        User user = new User();
+        user.setAccount(reqUser.getAccount());
+        user.setPassword(reqUser.getPassword());
+        user.setName(reqUser.getName());
+        user.setBranchId(reqUser.getBranchId());
+        user.setDepartmentId(reqUser.getDepartmentId());
+        user.setIsStopped((byte) reqUser.getIsStopped());
+
+        if (reqUser.getId() != null) {
+            user.setId(reqUser.getId());
+            user.setUpdatedDate(Timestamp.valueOf(LocalDateTime.now()));
+        }
+        return user;
+    }
+
+    /*
      * ユーザー情報一覧を取得
      */
     public List<UserForm> findAll() {
@@ -27,7 +61,7 @@ public class UserService {
 
     private List<UserForm> setUserForm(List<User> results) {
         List<UserForm> users = new ArrayList<>();
-        for(int i = 0; i < results.size(); i++){
+        for (int i = 0; i < results.size(); i++) {
             UserForm user = new UserForm();
             User result = results.get(i);
             user.setId(result.getId());
@@ -52,32 +86,5 @@ public class UserService {
         results.add(userRepository.findById(id).orElse(null));
         List<UserForm> users = setUserForm(results);
         return users.get(0);
-    }
-
-    /*
-     * ユーザー復活・停止フラグの更新
-     */
-    public void saveUser(UserForm userForm) {
-        User user = setUserEntity(userForm);
-        userRepository.save(user);
-    }
-
-    private User setUserEntity(UserForm reqUser) {
-        User user = new User();
-        user.setAccount(reqUser.getAccount());
-        user.setName(reqUser.getName());
-        user.setPassword(reqUser.getPassword());
-        user.setBranchId(reqUser.getBranchId());
-        user.setDepartmentId(reqUser.getDepartmentId());
-        user.setIsStopped((byte)reqUser.getIsStopped());
-
-        // 新規登録と更新を区別する（id == null 新規 / id != null 更新）
-        if(reqUser.getId() != null) {
-            user.setId(reqUser.getId());
-            user.setUpdatedDate(Timestamp.valueOf(LocalDateTime.now()));
-        }
-        return user;
-
-
     }
 }
