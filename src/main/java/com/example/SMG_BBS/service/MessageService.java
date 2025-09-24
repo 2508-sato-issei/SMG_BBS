@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Service
 public class MessageService {
@@ -21,6 +23,21 @@ public class MessageService {
         //絞り込み未実装（全件取得状態）
         List<Message> results = messageRepository.findAll();
         return setMessageForm(results);
+    }
+
+    /*
+     * レコード追加
+     */
+    public void saveMessage(MessageForm reqMessage) {
+        Message saveMassage = setMessageEntity(reqMessage);
+        messageRepository.save(saveMassage);
+    }
+
+    /*
+     *  レコード削除
+     */
+    public void deleteMessage(Integer id) {
+        messageRepository.deleteById(id);
     }
 
     /*
@@ -42,5 +59,22 @@ public class MessageService {
             messages.add(message);
         }
         return messages;
+    }
+
+    /*
+     * リクエストから取得した情報をentityに設定
+     */
+    private Message setMessageEntity(MessageForm reqMessage) {
+        Message message = new Message();
+        message.setTitle(reqMessage.getTitle());
+        message.setText(reqMessage.getText());
+        message.setCategory(reqMessage.getCategory());
+        message.setUserId(reqMessage.getUserId());
+
+        if (reqMessage.getId() != null) {
+            message.setId(reqMessage.getId());
+            message.setUpdatedDate(Timestamp.valueOf(LocalDateTime.now()));
+        }
+        return message;
     }
 }

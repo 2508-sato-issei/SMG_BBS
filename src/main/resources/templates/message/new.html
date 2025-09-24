@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/style.css}" rel="styleSheet">
+    <title>投稿登録</title>
+</head>
+<body>
+<div class="header-contents">
+    <h2>投稿登録</h2>
+</div>
+<div class="main-contents">
+    <form method="post" action="/message/add" th:object="${formModel}">
+        <div class="errorMessages">
+            <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+            <div th:if="${#fields.hasErrors('text')}" th:errors="*{text}"></div>
+            <div th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></div>
+        </div>
+        <div class="from-area">
+            <label>タイトル</label><br/>
+            <textarea class="" th:field="*{title}" size="20" maxlength="200"></textarea><br/>
+            <label>投稿内容</label><br/>
+            <textarea class="" th:field="*{text}" size="20" maxlength="200"></textarea><br/>
+            <label>カテゴリ</label><br/>
+            <textarea class="" th:field="*{category}" size="20" maxlength="200"></textarea><br/>
+            <input type="submit" value="登録"/>
+        </div>
+    </form>
+</div>
+<div class="footer-contents">
+    <form action="/">
+        <input type="submit" value="戻る">
+    </form>
+</div>
+</body>
+</html>
