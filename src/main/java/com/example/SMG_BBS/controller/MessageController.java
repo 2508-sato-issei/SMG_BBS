@@ -1,0 +1,81 @@
+package com.example.SMG_BBS.controller;
+
+import com.example.SMG_BBS.controller.form.MessageForm;
+import com.example.SMG_BBS.controller.form.UserForm;
+import com.example.SMG_BBS.service.MessageService;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.Objects;
+
+@Controller
+public class MessageController {
+    @Autowired
+    MessageService messageService;
+
+    /*
+     * 新規投稿画面表示
+     */
+    @GetMapping("/message/new")
+    public ModelAndView newMessage(Model model) {
+
+        ModelAndView mav = new ModelAndView();
+
+        if (!model.containsAttribute("formModel")) {
+            MessageForm messageForm = new MessageForm();
+            mav.addObject("formModel", messageForm);
+        }
+
+        mav.setViewName("message/new");
+        return mav;
+    }
+
+    /*
+     * 投稿登録処理
+     */
+    @PostMapping("/message/add")
+    public ModelAndView addMessage(@ModelAttribute("formModel") @Valid MessageForm messageForm,
+                                   BindingResult result, RedirectAttributes redirectAttributes) {
+
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.formModel", result);
+            redirectAttributes.addFlashAttribute("formModel", messageForm);
+            return new ModelAndView("redirect:new");
+        }
+
+        messageService.saveMessage(messageForm);
+        return new ModelAndView("redirect:/");
+    }
+
+    /*
+     * 投稿削除処理
+     */
+    @DeleteMapping("/message/delete/{id}")
+    public ModelAndView deleteMessage(@PathVariable Integer id,
+                                      @ModelAttribute("formModel") MessageForm messageForm,
+                                      HttpSession httpSession,
+                                      RedirectAttributes redirectAttributes) {
+
+        Integer userId = messageForm.getUserId();
+        UserForm loginUser = (UserForm) httpSession.getAttribute("loginUser");
+        Integer loginUserId = loginUser.getId();
+
+        if (!Objects.equals(userId, loginUserId)) {
+            String errorMessage = "無効なアクセスです";
+            redirectAttributes.addFlashAttribute(errorMessage);
+            return new ModelAndView("redirect:/");
+        }
+
+        messageService.deleteMessage(id);
+        return new ModelAndView("redirect:/");
+
+    }
+
+}
