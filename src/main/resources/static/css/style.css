@@ -1,0 +1,86 @@
+body {
+	background-color: #FFFFDD;
+}
+
+.header-contents {
+	margin-left: 20px;
+}
+
+.main-contents {
+	margin: 20px;
+	padding: 10px 10px 5px 10px;
+	background-color: #FFFFDD;
+	height: 100%;
+	width: 80%;
+}
+
+.footer-contents {
+	margin-left: 20px;
+}
+
+button {
+	margin-bottom: 5px;
+}
+
+.form-area {
+	margin: 10px;
+	padding: 10px;
+	background-color: white;
+}
+
+label {
+	display: block;
+}
+
+.errorMessages {
+	margin-top: 10px;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	margin-left: 10px;
+	color: red;
+}
+
+table, td, th {
+    border: 1px solid #000;
+}
+
+.content {
+    width: 240px;
+    display: inline-block;
+    word-wrap: break-word;
+    white-space: pre-wrap;  /* 改行や空白を保ちつつ折り返す */
+}
+
+.status {
+    width: 160px;
+    text-align: center;
+}
+
+.before-limit {
+    width: 240px;
+    background-color: #CDE6C7;
+    text-align: center;
+}
+
+.on-limit {
+    width: 240px;
+    background-color: #FFEF6C;
+    text-align: center;
+}
+
+.after-limit {
+    width: 240px;
+    background-color: #FF6666;
+    text-align: center;
+}
+
+.task-button {
+    width: 80px;
+    text-align: center;
+}
+
+.menu {
+    positon: fixed;
+    top:0;
+    left:0;
+}

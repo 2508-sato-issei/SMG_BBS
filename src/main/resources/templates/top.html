@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/style.css}" rel="styleSheet">
+    <script th:src="@{/js/main.js}"></script>
+    <title>掲示板</title>
+</head>
+<body>
+    <header>
+        <div class="header-contents">
+            <h2>掲示板</h2>
+            <a class="logout" th:href="@{/logout}">ログアウト</a>
+        </div>
+        <!--メニュー-->
+        <div class="menu">
+            <details>
+                <summary>メニュー</summary>
+                <ul>
+                    <li><a th:href="@{/new}">新規投稿</a></li>
+                    <li th:if="${isisShowButton}"><a th:href="@{/user}">ユーザー管理画面</a></li>
+                </ul>
+            </details>
+        </div>
+    </header>
+    <main>
+        <div class="main-contents">
+            <!--<div class="errorMessages" th:id="${#fields.hasErrors('')}" th:errors="*{}"></div>-->
+
+            <!--絞り込み-->
+            <div class="filter">
+                <form action="/" method="get">
+                    日付:<input type="date" name="startDate" th:value="${startDate}" />
+                    ~ <input type="date" name="endDate" th:value="${endDate}" />
+                    カテゴリ<input type="text" name="category" th:value="${category}" />
+                    <input type="submit" value="絞込">
+                </form>
+            </div>
+
+            <!--投稿表示-->
+            <div class="message-icon" th:each="message : ${messages}">
+                <div>
+                    件名 : <span th:text="${message.title}"></span>
+                </div>
+                <div>
+                    本文 : <span th:text="${message.text}"></span>
+                </div>
+                <div>
+                    カテゴリ : <span th:text="${message.category}"></span>
+                </div>
+                <div>
+                    投稿日時 : <span th:text="${#dates.format(message.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                </div>
+                <div th:each="user : ${users}">
+                    <div th:if="${user.id == message.userId}">
+                        投稿者 : <span th:text="${user.name}"></span>
+                    </div>
+                </div>
+                <!--投稿削除ボタン-->
+                <!--<div th:if="${session.loginUser.id == message.userId}">
+                    <form th:action="@{/message/delete/{id}(id=${message.id})}" th:method="delete">
+                        <input type="submit" value="削除">
+                    </form>
+                </div>-->
+                <!--返信フォーム-->
+                <!--<form method="post" th:action="/comment/add/{id}(id=message.id)" th:object="formModel">
+                    <div class="form-area">
+                        <label>返信</label>
+                        <textarea class="text-box" th:field="*{text}" size="20" maxlength="200"></textarea><br />
+                        <input type="submit" value="返信" />
+                    </div>
+                </form>-->
+                <!--返信表示-->
+               <!-- <div th:each="comment : ${comments}">
+                    <div th:if="${message.id == comment.messageId}">
+                        <div class="text">
+                            コメント：<span th:text="${comment.text}"></span>
+                            投稿日：<span th:text="${#dates.format(comment.createdDate, 'yyyy-MM-dd HH:mm:ss')}" ></span>
+                        </div>-->
+                        <!--コメント削除ボタン-->
+                       <!-- <form th:action="@{/comment/delete/{id}(id=${comment.id})}" th:method="delete">
+                            <input type="submit" value="削除">
+                        </form>
+                    </div>
+                </div>-->
+            </div>
+        </div>
+    </main>
+
+
+</body>
+</html>
