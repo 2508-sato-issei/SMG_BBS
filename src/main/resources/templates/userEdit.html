@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/style.css}" rel="styleSheet">
+    <title>ユーザー編集</title>
+</head>
+<body>
+<div class="header-contents">
+    <h2>ユーザー登録情報の編集</h2>
+</div>
+<div class="main-contents">
+    <!-- エラーメッセージを表示 -->
+    <div class="errorMessages" th:if="${errorMessages != null}">
+        <div th:each="errorMessage : ${errorMessages}" th:text="${errorMessage}"></div>
+    </div>
+    <!-- ユーザー情報入力欄 -->
+    <form th:action="@{/user/update/{id}(id=${formModel.id})}" th:method="put" th:object="formModel">
+        <input th:field="*{account}"/>
+        <input th:field="*{name}"/>
+        <select name="branch">
+            <option value="1" th:selected="*{branchId == 1}">本社</option>
+            <option value="2" th:selected="*{branchId == 2}">A支社</option>
+            <option value="3" th:selected="*{branchId == 3}">B支社</option>
+            <option value="4" th:selected="*{branchId == 4}">C支社</option>
+        </select>
+        <select name="department">
+            <option value="1" th:selected="*{departmentId == 1}">総務人事部</option>
+            <option value="2" th:selected="*{departmentId == 2}">情報管理部</option>
+            <option value="3" th:selected="*{departmentId == 3}">営業部</option>
+            <option value="4" th:selected="*{departmentId == 4}">技術部</option>
+        </select>
+        <select name="isStopped">
+            <option value="0" th:selected="*{isStopped == 0}">有効</option>
+            <option value="1" th:selected="*{isStopped == 1}">停止中</option>
+        </select>
+    </form>
+</div>
+<div class="footer-contents">
+    <form th:action="${/manage}">
+        <input type="submit" value="戻る">
+    </form>
+</div>
+</body>
+</html>
