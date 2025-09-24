@@ -37,45 +37,47 @@ public class MessageController {
         return mav;
     }
 
-//    /*
-//     * 投稿登録処理
-//     */
-//    @PostMapping("/message/add")
-//    public ModelAndView addMessage(@ModelAttribute("formModel") @Valid MessageForm messageForm,
-//                                   BindingResult result, RedirectAttributes redirectAttributes) {
-//
-//        if (result.hasErrors()) {
-//            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.formModel", result);
-//            redirectAttributes.addFlashAttribute("formModel", messageForm);
-//            return new ModelAndView("redirect:new");
-//        }
-//
-//        messageService.saveMessage(messageForm);
-//        return new ModelAndView("redirect:/");
-//    }
+    /*
+     * 投稿登録処理
+     */
+    @PostMapping("/message/add")
+    public ModelAndView addMessage(@ModelAttribute("formModel") @Valid MessageForm messageForm,
+                                   BindingResult result, RedirectAttributes redirectAttributes) {
+
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute(
+                    "org.springframework.validation.BindingResult.formModel", result);
+            redirectAttributes.addFlashAttribute("formModel", messageForm);
+            return new ModelAndView("redirect:new");
+        }
+
+        messageService.saveMessage(messageForm);
+        return new ModelAndView("redirect:/");
+    }
 
     /*
      * 投稿削除処理
      */
-//    @DeleteMapping("/message/delete/{id}")
-//    public ModelAndView deleteMessage(@PathVariable Integer id,
-//                                      @ModelAttribute("formModel") MessageForm messageForm,
-//                                      HttpSession httpSession,
-//                                      RedirectAttributes redirectAttributes) {
-//
-//        Integer userId = messageForm.getUserId();
-//        UserForm loginUser = (UserForm) httpSession.getAttribute("loginUser");
-//        Integer loginUserId = loginUser.getId();
-//
-//        if (!Objects.equals(userId, loginUserId)) {
-//            String errorMessage = "無効なアクセスです";
-//            redirectAttributes.addFlashAttribute(errorMessage);
-//            return new ModelAndView("redirect:/");
-//        }
-//
-//        messageService.deleteMessage(id);
-//        return new ModelAndView("redirect:/");
-//
-//    }
+    @DeleteMapping("/message/delete/{id}")
+    public ModelAndView deleteMessage(@PathVariable Integer id,
+                                      @ModelAttribute("formModel") MessageForm messageForm,
+                                      HttpSession httpSession,
+                                      RedirectAttributes redirectAttributes) {
+
+        Integer userId = messageForm.getUserId();
+        UserForm loginUser = (UserForm) httpSession.getAttribute("loginUser");
+        Integer loginUserId = loginUser.getId();
+
+        // 削除権限判定
+        if (!Objects.equals(userId, loginUserId)) {
+            String errorMessage = "無効なアクセスです";
+            redirectAttributes.addFlashAttribute(errorMessage);
+            return new ModelAndView("redirect:/");
+        }
+
+        messageService.deleteMessage(id);
+        return new ModelAndView("redirect:/");
+
+    }
 
 }

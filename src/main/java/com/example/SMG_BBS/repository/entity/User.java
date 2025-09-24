@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -41,7 +40,7 @@ public class User {
     private Timestamp createdDate;
 
     @Column(insertable = false, updatable = false)
-    private  Timestamp updatedDate;
+    private Timestamp updatedDate;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Message> messages;
