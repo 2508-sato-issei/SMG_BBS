@@ -45,7 +45,8 @@ public class MessageController {
                                    BindingResult result, RedirectAttributes redirectAttributes) {
 
         if (result.hasErrors()) {
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.formModel", result);
+            redirectAttributes.addFlashAttribute(
+                    "org.springframework.validation.BindingResult.formModel", result);
             redirectAttributes.addFlashAttribute("formModel", messageForm);
             return new ModelAndView("redirect:new");
         }
@@ -67,6 +68,7 @@ public class MessageController {
         UserForm loginUser = (UserForm) httpSession.getAttribute("loginUser");
         Integer loginUserId = loginUser.getId();
 
+        // 削除権限判定
         if (!Objects.equals(userId, loginUserId)) {
             String errorMessage = "無効なアクセスです";
             redirectAttributes.addFlashAttribute(errorMessage);

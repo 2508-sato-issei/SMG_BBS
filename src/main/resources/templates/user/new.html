@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/style.css}" rel="styleSheet">
+    <title>ユーザ登録</title>
+</head>
+<body>
+<div class="header-contents">
+    <h2>ユーザ登録</h2>
+</div>
+<div class="main-contents">
+    <form method="post" action="/user/add" th:object="${formModel}">
+        <div class="errorMessages">
+            <div th:if="${#fields.hasErrors('account')}" th:errors="*{account}"></div>
+            <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+            <div th:if="${#fields.hasErrors('branchId')}" th:errors="*{branchId}"></div>
+            <div th:if="${#fields.hasErrors('departmentId')}" th:errors="*{departmentId}"></div>
+        </div>
+        <div class="form-area">
+            <label>アカウント</label><br/>
+            <textarea th:field="*{account}" size="20" maxlength="200"></textarea><br/>
+            <label>パスワード</label><br/>
+            <input type="password" th:field="*{password}"/><br/>
+            <label>パスワード（確認用）</label><br/>
+            <input type="password" name="confirmationPassword" th:value="${confirmationPassword}"><br/>
+            <label>氏名</label><br/>
+            <textarea th:field="*{name}" size="20" maxlength="200"></textarea><br/>
+            <label>支社</label><br/>
+            <select th:field="*{branchId}">
+                <option value="" selected></option>
+                <option value="1">本社</option>
+                <option value="2">A支社</option>
+                <option value="3">B支社</option>
+                <option value="4">C支社</option>
+            </select><br/>
+            <label>部署</label><br/>
+            <select th:field="*{departmentId}">
+                <option value="" selected></option>
+                <option value="1">総務人事部</option>
+                <option value="2">情報管理部</option>
+                <option value="3">営業部</option>
+                <option value="4">技術部</option>
+            </select><br/>
+            <input type="submit" value="登録"/>
+        </div>
+    </form>
+</div>
+<div class="footer-contents">
+    <form action="/">
+        <input type="submit" value="戻る"/>
+    </form>
+</div>
+</body>
+</html>
