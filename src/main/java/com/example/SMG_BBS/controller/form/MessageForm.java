@@ -1,5 +1,8 @@
 package com.example.SMG_BBS.controller.form;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,15 +12,24 @@ import java.sql.Timestamp;
 @Setter
 public class MessageForm {
 
-    private int id;
+    private Integer id;
 
+    @NotNull(message = "件名を入力してください")
+    @Pattern(regexp = ".*[^\\s　].*", message = "件名を入力してください") // 半角スペース・全角スペース・改行 のみ入力の場合バリデーションエラー
+    @Size(min = 0, max = 30, message = "件名は30文字以内で入力してください")
     private String title;
 
+    @NotNull(message = "本文を入力してください")
+    @Pattern(regexp = ".*[^\\s　].*", message = "本文を入力してください") // 半角スペース・全角スペース・改行 のみ入力の場合バリデーションエラー
+    @Size(min = 0, max = 1000, message = "本文は1000文字以内で入力してください")
     private String text;
 
+    @NotNull(message = "カテゴリを入力してください")
+    @Pattern(regexp = ".*[^\\s　].*", message = "カテゴリを入力してください") // 半角スペース・全角スペース・改行 のみ入力の場合バリデーションエラー
+    @Size(min = 0, max = 10, message = "カテゴリは10文字以内で入力してください")
     private String category;
 
-    private int userId;
+    private Integer userId;
 
     private Timestamp createdDate;
 

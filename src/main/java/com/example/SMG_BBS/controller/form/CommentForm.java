@@ -9,13 +9,13 @@ import java.sql.Timestamp;
 @Setter
 public class CommentForm {
 
-    private int id;
+    private Integer id;
 
     private String text;
 
-    private int userId;
+    private Integer userId;
 
-    private int messageId;
+    private Integer messageId;
 
     private Timestamp createdDate;
 
