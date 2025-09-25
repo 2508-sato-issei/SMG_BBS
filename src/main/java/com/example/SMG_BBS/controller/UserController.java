@@ -1,5 +1,6 @@
 package com.example.SMG_BBS.controller;
 
+import com.example.SMG_BBS.controller.form.EditValidation;
 import com.example.SMG_BBS.controller.form.UserForm;
 import com.example.SMG_BBS.repository.entity.User;
 import com.example.SMG_BBS.service.UserService;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -93,7 +95,7 @@ public class UserController {
         }
 
         userService.saveUser(userForm);
-        return new ModelAndView("redirect:manage");
+        return new ModelAndView("redirect:/user");
     }
 
     /*
@@ -152,11 +154,11 @@ public class UserController {
         }
 
         // 編集対象のレコードを取得
-        UserForm user = userService.findUser(Integer.valueOf(id));
+        UserForm user = userService.selectUserById(Integer.valueOf(id));
 
         // 編集画面表示
         ModelAndView mav = new ModelAndView();
-        mav.setViewName("/user/edit");
+        mav.setViewName("user/edit");
         mav.addObject("formModel", user);
         return mav;
 
@@ -168,7 +170,8 @@ public class UserController {
     @PutMapping("/change/{id}")
     public ModelAndView isStoppedChange(@PathVariable Integer id,
                                         @RequestParam Integer isStopped) {
-        UserForm user = userService.findUser(id);
+
+        UserForm user = userService.selectUserById(id);
         user.setIsStopped(isStopped);
         userService.saveUser(user);
 
@@ -180,16 +183,63 @@ public class UserController {
      */
     @PutMapping("/user/update/{id}")
     public ModelAndView updateUser(@PathVariable Integer id,
-                                   @ModelAttribute("formModel") UserForm userForm) {
-        // 既存のレコードを取得
-        UserForm user = userService.findUser(id);
-        // パスワードが入力されていない場合は既存レコードのパスワードをFormにセット
-        if(userForm.getPassword().isBlank()) {
-            userForm.setPassword(user.getPassword());
+                                   String account,
+                                   String confirmationPassword,
+                                   @ModelAttribute("formModel") @Validated(value = {EditValidation.class}) UserForm userForm,
+                                   BindingResult result) {
+
+        // IDから既存のレコードを取得
+        UserForm user = userService.selectUserById(id);
+
+        // アカウントから既存レコードを取得
+        User duplicationUser = userService.selectUserByAccount(account);
+
+        // アカウント重複チェック(同一アカウントが存在し、かつユーザーIDが一致しない場合 ＝ 重複)
+        if(duplicationUser != null && duplicationUser.getId() != id) {
+            FieldError fieldError = new FieldError(result.getObjectName(),
+                    "account", "アカウントが重複しています");
+            result.addError(fieldError);
+        }
+
+        // パスワードとパスワード（確認用）の一致チェック
+        if (userForm.getPassword() != null) {
+            String password = userForm.getPassword();
+            if (!password.matches(confirmationPassword)) {
+                FieldError fieldError = new FieldError(result.getObjectName(),
+                        "password", "パスワードと確認用パスワードが一致しません");
+                result.addError(fieldError);
+            } else {
+                // パスワードを暗号化
+                String encPassword = CipherUtil.encrypt(userForm.getPassword());
+                userForm.setPassword(encPassword);
+            }
         } else {
-            // パスワードを暗号化
-            String encPassword = CipherUtil.encrypt(userForm.getPassword());
-            userForm.setPassword(encPassword);
+            // パスワードが入力されていない場合は既存レコードのパスワードをFormにセット
+            userForm.setPassword(user.getPassword());
+        }
+
+        // 支社と部署の組み合わせチェック
+        if (userForm.getBranchId() != null && userForm.getDepartmentId() != null) {
+            Map<String, Set<String>> allowedCombinations = Map.of(
+                    "1", Set.of("1", "2"),
+                    "2", Set.of("3", "4"),
+                    "3", Set.of("3", "4"),
+                    "4", Set.of("3", "4")
+            );
+            String branchId = userForm.getBranchId().toString();
+            String departmentId = userForm.getDepartmentId().toString();
+            if (!allowedCombinations.containsKey(branchId) && allowedCombinations.get(branchId).contains(departmentId)) {
+                FieldError fieldError = new FieldError(result.getObjectName(),
+                        "branchId", "支社と部署の組み合わせが不正です");
+                result.addError(fieldError);
+            }
+        }
+
+        if (result.hasErrors()) {
+            ModelAndView mav = new ModelAndView();
+            mav.addObject("formModel", userForm);
+            mav.setViewName("user/edit");
+            return mav;
         }
 
         userService.saveUser(userForm);

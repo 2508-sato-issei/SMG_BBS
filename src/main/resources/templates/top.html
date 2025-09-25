@@ -10,7 +10,9 @@
     <header>
         <div class="header-contents">
             <h2>掲示板</h2>
-            <a class="logout" th:href="@{/logout}">ログアウト</a>
+            <form class="logout" th:action="@{/logout}" th:method="get">
+                <input type="submit" value="ログアウト">
+            </form>
         </div>
         <!--メニュー-->
         <div class="menu">
@@ -18,7 +20,7 @@
                 <summary>メニュー</summary>
                 <ul>
                     <li><a th:href="@{/new}">新規投稿</a></li>
-                    <li th:if="${isisShowButton}"><a th:href="@{/user}">ユーザー管理画面</a></li>
+                    <li><a th:href="@{/user}">ユーザー管理画面</a></li>
                 </ul>
             </details>
         </div>

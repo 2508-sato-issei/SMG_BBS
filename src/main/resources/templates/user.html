@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link th:href="@{/css/style.css}" rel="styleSheet">
+    <script th:src="@{/js/operatingStatus.js}"></script>
     <title>ユーザー管理画面</title>
 </head>
 <body>
@@ -27,35 +28,47 @@
             <th>アカウントの状態</th>
         </tr>
         <tr class="user" th:each="user : ${users}">
-            <form th:action="@{/change/{id}(id=${user.id})}" th:method="put">
-                <td>
-                    <a th:href="@{/user/edit/{id}(id=${user.id})}">
+
+            <td>
+                <a th:href="@{/user/edit/{id}(id=${user.id})}">
                         <input type="button" value="編集"/>
-                    </a>
-                </td>
-                <td><!-- ユーザーID・アカウント名表示 -->
-                    <span th:text="${user.id}"></span><br/>
-                    <span name="account" th:text="${user.account}"></span>
-                </td>
-                <td><!-- 氏名表示 -->
-                    <span name="name" th:text="${user.name}"></span>
-                </td>
-                <td><!-- 所属表示 -->
-                    <span name="branch" th:text="${user.branchId}"></span><br/>
-                    <span name="department" th:text="${user.departmentId}"></span>
-                </td>
-                <td>
-                    <span th:text="${user.createdDate}"></span><br/>
-                    <span th:text="${user.updatedDate}"></span>
-                </td>
-                <td>
-                        <select name="isStopped">
-                            <option value="0" th:selected="${user.isStopped == 0}">有効</option>
-                            <option value="1" th:selected="${user.isStopped == 1}">停止中</option>
-                        </select>
-                        <input type="submit" value="変更"/>
-                </td>
-            </form>
+                </a>
+            </td>
+            <td><!-- ユーザーID・アカウント名表示 -->
+                <span th:text="${user.id}"></span><br/>
+                <span name="account" th:text="${user.account}"></span>
+            </td>
+            <td><!-- 氏名表示 -->
+                <span name="name" th:text="${user.name}"></span>
+            </td>
+            <td><!-- 所属表示 -->
+                <th:block th:switch="${user.branchId}">
+                    <span th:case=1 th:text="本社"></span>
+                    <span th:case=2 th:text="A支社"></span>
+                    <span th:case=3 th:text="B支社"></span>
+                    <span th:case=4 th:text="C支社"></span>
+                </th:block><br/>
+                <!-- 部署名表示 -->
+                <th:block th:switch="${user.departmentId}">
+                    <span th:case=1 th:text="総務人事部"></span>
+                    <span th:case=2 th:text="情報管理部"></span>
+                    <span th:case=3 th:text="営業部"></span>
+                    <span th:case=4 th:text="技術部"></span>
+                </th:block>
+            </td>
+            <td>
+                <span th:text="${#temporals.format(user.createdDate, 'yyyy/MM/dd HH:mm:ss')}"></span><br/>
+                <span th:text="${#temporals.format(user.updatedDate, 'yyyy/MM/dd HH:mm:ss')}"></span>
+            </td>
+            <td>
+                <form th:action="@{/change/{id}(id=${user.id})}" th:method="put" onSubmit="return CheckAlter()">
+                    <select name="isStopped">
+                        <option value="0" th:selected="${user.isStopped == 0}">有効</option>
+                        <option value="1" th:selected="${user.isStopped == 1}">停止中</option>
+                    </select>
+                    <input type="submit" value="変更"/>
+                </form>
+            </td>
         </tr>
     </table>
 </div>

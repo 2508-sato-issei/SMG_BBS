@@ -1,5 +1,6 @@
 package com.example.SMG_BBS.controller;
 
+import com.example.SMG_BBS.controller.form.UserForm;
 import com.example.SMG_BBS.controller.form.UserMessageForm;
 import com.example.SMG_BBS.service.MessageService;
 import jakarta.servlet.http.HttpSession;
@@ -27,6 +28,17 @@ public class TopController {
                             @RequestParam(required = false) String category){
         ModelAndView mav = new ModelAndView();
 
+        UserForm loginUser = new UserForm();
+        loginUser.setId(1);
+        loginUser.setAccount("master1");
+        loginUser.setPassword("root");
+        loginUser.setName("総務人事部");
+        loginUser.setBranchId(1);
+        loginUser.setDepartmentId(1);
+        loginUser.setIsStopped(0);
+        session.setAttribute("loginUser", loginUser);
+
+
 //        //loginUserの部署IDが総務人事部ならばボタン表示フラグON
 //        boolean isShowButton = false;
 //        UserForm user = (UserForm)session.getAttribute("loginUser");
@@ -46,10 +58,10 @@ public class TopController {
     }
 
     // ログアウト機能
-    @PostMapping("/logout")
+    @GetMapping("/logout")
     public ModelAndView logout(HttpSession session) {
 
         session.invalidate();
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/login");
     }
 }
