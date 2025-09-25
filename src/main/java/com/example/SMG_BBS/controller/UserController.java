@@ -156,7 +156,7 @@ public class UserController {
 
         // 編集画面表示
         ModelAndView mav = new ModelAndView();
-        mav.setViewName("/user/edit");
+        mav.setViewName("user/edit");
         mav.addObject("formModel", user);
         return mav;
 
