@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -34,10 +34,10 @@ public class UserForm {
     @NotNull(message = "部署を選択してください")
     private Integer departmentId;
 
-    private byte isStopped;
+    private int isStopped;
 
-    private Timestamp createdDate;
+    private LocalDateTime createdDate;
 
-    private Timestamp updatedDate;
+    private LocalDateTime updatedDate;
 
 }

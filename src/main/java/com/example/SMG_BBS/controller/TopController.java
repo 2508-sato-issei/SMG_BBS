@@ -1,14 +1,15 @@
 package com.example.SMG_BBS.controller;
 
-import com.example.SMG_BBS.controller.form.MessageForm;
-import com.example.SMG_BBS.controller.form.UserForm;
-import com.example.SMG_BBS.repository.entity.Message;
-import com.example.SMG_BBS.repository.entity.User;
+import com.example.SMG_BBS.controller.form.CommentForm;
+import com.example.SMG_BBS.controller.form.UserMessageForm;
 import com.example.SMG_BBS.service.MessageService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -23,7 +24,11 @@ public class TopController {
      * Top画面表示
      */
     @GetMapping
-    public ModelAndView top(HttpSession session){
+    public ModelAndView top(HttpSession session,
+                            @RequestParam(required = false) String startDate,
+                            @RequestParam(required = false) String endDate,
+                            @RequestParam(required = false) String category,
+                            Model model){
         ModelAndView mav = new ModelAndView();
 
 //        //loginUserの部署IDが総務人事部ならばボタン表示フラグON
@@ -33,11 +38,29 @@ public class TopController {
 //            isShowButton = true;
 //        }
 
-        List<MessageForm> messages = messageService.findMessage();
+        //投稿情報取得
+        List<UserMessageForm> messages = messageService.findMessage(startDate, endDate, category);
+
+        //modelにformModelが存在しないとき空のcommentFormをviewに渡す
+        if(!model.containsAttribute("formModel")){
+            CommentForm commentForm = new CommentForm();
+            mav.addObject("formModel", commentForm);
+        }
 
         mav.setViewName("/top");
 //        mav.addObject("isShowButton", isShowButton);
         mav.addObject("messages", messages);
+        mav.addObject("startDate", startDate);
+        mav.addObject("endDate", endDate);
+        mav.addObject("category", category);
         return mav;
+    }
+
+    // ログアウト機能
+    @PostMapping("/logout")
+    public ModelAndView logout(HttpSession session) {
+
+        session.invalidate();
+        return new ModelAndView("redirect:/");
     }
 }

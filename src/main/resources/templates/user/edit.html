@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/style.css}" rel="styleSheet">
+    <title>ユーザー編集</title>
+</head>
+<body>
+<div class="header-contents">
+    <h2>ユーザー登録情報の編集</h2>
+</div>
+<div class="main-contents">
+    <!-- エラーメッセージを表示 -->
+    <div class="errorMessages" th:if="${errorMessages != null}">
+        <div th:each="errorMessage : ${errorMessages}" th:text="${errorMessage}"></div>
+    </div>
+    <!-- ユーザー情報入力欄 -->
+    <form th:action="@{/user/update/{id}(id=${formModel.id})}" th:method="put" th:object="${formModel}">
+        <label>アカウント名</label>
+        <input th:field="*{account}"/>
+        <label>パスワード</label>
+        <input id="password" name="password">
+        <label>氏名</label>
+        <input th:field="*{name}"/>
+        <label>本社/支社名</label>
+        <select name="branchId">
+            <option value="1" th:selected="*{branchId == 1}">本社</option>
+            <option value="2" th:selected="*{branchId == 2}">A支社</option>
+            <option value="3" th:selected="*{branchId == 3}">B支社</option>
+            <option value="4" th:selected="*{branchId == 4}">C支社</option>
+        </select>
+        <label>所属部名</label>
+        <select name="departmentId">
+            <option value="1" th:selected="*{departmentId == 1}">総務人事部</option>
+            <option value="2" th:selected="*{departmentId == 2}">情報管理部</option>
+            <option value="3" th:selected="*{departmentId == 3}">営業部</option>
+            <option value="4" th:selected="*{departmentId == 4}">技術部</option>
+        </select>
+        <label>稼働状況</label>
+        <select name="isStopped">
+            <option value="0" th:selected="*{isStopped == 0}">有効</option>
+            <option value="1" th:selected="*{isStopped == 1}">停止中</option>
+        </select>
+        <input type="submit" value="更新">
+    </form>
+</div>
+<div class="footer-contents">
+    <form th:action="@{/user}">
+        <input type="submit" value="戻る">
+    </form>
+</div>
+</body>
+</html>

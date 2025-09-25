@@ -8,14 +8,17 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserService {
+
     @Autowired
     UserRepository userRepository;
 
     /*
-     * レコード追加
+     * レコード追加、ユーザー復活・停止フラグの更新
      */
     public void saveUser(UserForm reqUser) {
         User saveUser = setUserEntity(reqUser);
@@ -25,9 +28,9 @@ public class UserService {
     /*
      * アカウント重複チェック用
      */
-        public User selectUserByAccount(String account) {
-            return userRepository.findByAccount(account).orElse(null);
-        }
+    public User selectUserByAccount(String account) {
+        return userRepository.findByAccount(account).orElse(null);
+    }
 
     /*
      * リクエストから取得した情報をentityに設定
@@ -39,6 +42,7 @@ public class UserService {
         user.setName(reqUser.getName());
         user.setBranchId(reqUser.getBranchId());
         user.setDepartmentId(reqUser.getDepartmentId());
+        user.setIsStopped((byte) reqUser.getIsStopped());
 
         if (reqUser.getId() != null) {
             user.setId(reqUser.getId());
@@ -47,4 +51,40 @@ public class UserService {
         return user;
     }
 
+    /*
+     * ユーザー情報一覧を取得
+     */
+    public List<UserForm> findAll() {
+        List<User> results = userRepository.findAll();
+        return setUserForm(results);
+    }
+
+    private List<UserForm> setUserForm(List<User> results) {
+        List<UserForm> users = new ArrayList<>();
+        for (int i = 0; i < results.size(); i++) {
+            UserForm user = new UserForm();
+            User result = results.get(i);
+            user.setId(result.getId());
+            user.setAccount(result.getAccount());
+            user.setPassword(result.getPassword());
+            user.setName(result.getName());
+            user.setBranchId(result.getBranchId());
+            user.setDepartmentId(result.getDepartmentId());
+            user.setIsStopped(result.getIsStopped());
+            user.setCreatedDate(result.getCreatedDate().toLocalDateTime());
+            user.setUpdatedDate(result.getUpdatedDate().toLocalDateTime());
+            users.add(user);
+        }
+        return users;
+    }
+
+    /*
+     * ユーザー編集画面でのユーザー情報を取得
+     */
+    public UserForm findUser(Integer id) {
+        List<User> results = new ArrayList<>();
+        results.add(userRepository.findById(id).orElse(null));
+        List<UserForm> users = setUserForm(results);
+        return users.get(0);
+    }
 }

@@ -17,7 +17,7 @@
             <details>
                 <summary>メニュー</summary>
                 <ul>
-                    <li><a th:href="@{/message/new}">新規投稿</a></li>
+                    <li><a th:href="@{/new}">新規投稿</a></li>
                     <li th:if="${isShowButton}"><a th:href="@{/user}">ユーザー管理画面</a></li>
                 </ul>
             </details>
@@ -25,7 +25,9 @@
     </header>
     <main>
         <div class="main-contents">
-            <!--<div class="errorMessages" th:id="${#fields.hasErrors('')}" th:errors="*{}"></div>-->
+            <div class="errorMessages" th:if="${errorMessages != null}">
+                <div th:each="errorMessage : ${errorMessages}" th:text="${errorMessages}"></div>
+            </div>
 
             <!--絞り込み-->
             <div class="filter">
@@ -51,10 +53,8 @@
                 <div>
                     投稿日時 : <span th:text="${#dates.format(message.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
                 </div>
-                <div th:each="user : ${users}">
-                    <div th:if="${user.id == message.userId}">
-                        投稿者 : <span th:text="${user.name}"></span>
-                    </div>
+                <div>
+                    投稿者 : <span th:text="${message.user.name}"></span>
                 </div>
                 <!--投稿削除ボタン-->
                 <!--<div th:if="${session.loginUser.id == message.userId}">
@@ -63,30 +63,32 @@
                     </form>
                 </div>-->
                 <!--返信フォーム-->
-                <!--<form method="post" th:action="/comment/add/{id}(id=message.id)" th:object="formModel">
+                <form method="post" th:action="@{/comment/add/{id}(id=${message.id})}" th:object="${formModel}">
                     <div class="form-area">
+                        <div th:if="${errorId == message.id}" class="errorMessages" th:id="${#fields.hasErrors('text')}" th:errors="*{text}"></div>
                         <label>返信</label>
                         <textarea class="text-box" th:field="*{text}" size="20" maxlength="200"></textarea><br />
                         <input type="submit" value="返信" />
                     </div>
-                </form>-->
+                </form>
                 <!--返信表示-->
-               <!-- <div th:each="comment : ${comments}">
+               <div th:each="comment : ${comments}">
                     <div th:if="${message.id == comment.messageId}">
                         <div class="text">
                             コメント：<span th:text="${comment.text}"></span>
                             投稿日：<span th:text="${#dates.format(comment.createdDate, 'yyyy-MM-dd HH:mm:ss')}" ></span>
-                        </div>-->
+                        </div>
                         <!--コメント削除ボタン-->
-                       <!-- <form th:action="@{/comment/delete/{id}(id=${comment.id})}" th:method="delete">
-                            <input type="submit" value="削除">
-                        </form>
+                        <!--<div th:if="${session.loginUser.id == comment.userId}">-->
+                           <form th:action="@{/comment/delete/{id}(id=${comment.id})}" th:method="delete">
+                                <input type="submit" value="削除">
+                           </form>
+                       <!--</div>-->
                     </div>
-                </div>-->
+                </div>
+                <hr>
             </div>
         </div>
     </main>
-
-
 </body>
 </html>
