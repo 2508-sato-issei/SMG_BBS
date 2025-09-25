@@ -1,4 +1,4 @@
-package com.example.SMG_BBS.config;
+package com.example.SMG_BBS.security;
 
 import com.example.SMG_BBS.repository.UserRepository;
 import com.example.SMG_BBS.repository.entity.User;

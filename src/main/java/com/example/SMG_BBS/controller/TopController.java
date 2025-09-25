@@ -1,6 +1,6 @@
 package com.example.SMG_BBS.controller;
 
-import com.example.SMG_BBS.config.LoginUserDetails;
+import com.example.SMG_BBS.security.LoginUserDetails;
 import com.example.SMG_BBS.controller.form.CommentForm;
 import com.example.SMG_BBS.controller.form.UserCommentForm;
 import com.example.SMG_BBS.controller.form.UserMessageForm;
@@ -68,10 +68,12 @@ public class TopController {
     }
 
     // ログアウト機能
-    @GetMapping("/logout")
+    /*@GetMapping("/logout")
     public ModelAndView logout(HttpSession session) {
 
         session.invalidate();
         return new ModelAndView("redirect:/login");
     }
+     */
+
 }

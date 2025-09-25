@@ -1,4 +1,4 @@
-package com.example.SMG_BBS.controller;
+package com.example.SMG_BBS.controller.security;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,6 +1,6 @@
 package com.example.SMG_BBS.controller;
 
-import com.example.SMG_BBS.config.LoginUserDetails;
+import com.example.SMG_BBS.security.LoginUserDetails;
 import com.example.SMG_BBS.controller.form.MessageForm;
 import com.example.SMG_BBS.controller.form.UserForm;
 import com.example.SMG_BBS.service.MessageService;

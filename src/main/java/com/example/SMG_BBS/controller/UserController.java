@@ -1,7 +1,7 @@
 package com.example.SMG_BBS.controller;
 
-import com.example.SMG_BBS.controller.form.EditValidation;
-import com.example.SMG_BBS.config.LoginUserDetails;
+import com.example.SMG_BBS.security.LoginUserDetails;
+import com.example.SMG_BBS.validation.EditValidation;
 import com.example.SMG_BBS.controller.form.UserForm;
 import com.example.SMG_BBS.repository.entity.User;
 import com.example.SMG_BBS.service.UserService;
@@ -194,7 +194,7 @@ public class UserController {
                                    BindingResult result) {
 
         // IDから既存のレコードを取得
-        UserForm user = userService.selectUserById(id);
+//        UserForm user = userService.selectUserById(id);
 
         // アカウントから既存レコードを取得
         User duplicationUser = userService.selectUserByAccount(account);
@@ -213,14 +213,14 @@ public class UserController {
                 FieldError fieldError = new FieldError(result.getObjectName(),
                         "password", "パスワードと確認用パスワードが一致しません");
                 result.addError(fieldError);
-            } else {
-                // パスワードを暗号化
-                String encPassword = CipherUtil.encrypt(userForm.getPassword());
-                userForm.setPassword(encPassword);
+//            } else {
+//                // パスワードを暗号化
+//                String encPassword = CipherUtil.encrypt(userForm.getPassword());
+//                userForm.setPassword(encPassword);
             }
-        } else {
-            // パスワードが入力されていない場合は既存レコードのパスワードをFormにセット
-            userForm.setPassword(user.getPassword());
+//        } else {
+//            // パスワードが入力されていない場合は既存レコードのパスワードをFormにセット
+//            userForm.setPassword(user.getPassword());
         }
 
         // 支社と部署の組み合わせチェック

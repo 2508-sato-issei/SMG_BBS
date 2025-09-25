@@ -26,14 +26,17 @@ public class UserService {
      */
     public void saveUser(UserForm reqUser) {
 
+        // 新規投稿の場合 または パスワード更新有の場合
+        if (reqUser.getId() == null || (!reqUser.getPassword().isBlank() && reqUser.getIsStopped() == 0)) {
+            String rawPassword = reqUser.getPassword();
+            String encodedPassword = passwordEncoder.encode(rawPassword);
+            reqUser.setPassword(encodedPassword);
+        }
+
         if (reqUser.getId() != null && reqUser.getPassword().isBlank()) {
             User user = userRepository.findById(reqUser.getId()).orElse(null);
             reqUser.setPassword(user.getPassword());
         }
-
-        String rawPassword = reqUser.getPassword();
-        String encodedPassword = passwordEncoder.encode(rawPassword); // ハッシュ化
-        reqUser.setPassword(encodedPassword);
 
         User saveUser = setUserEntity(reqUser);
         userRepository.save(saveUser);

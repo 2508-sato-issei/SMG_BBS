@@ -1,4 +1,4 @@
-package com.example.SMG_BBS.controller;
+package com.example.SMG_BBS.controller.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
