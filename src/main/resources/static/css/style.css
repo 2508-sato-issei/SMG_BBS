@@ -1,35 +1,88 @@
 body {
-	background-color: #FFFFDD;
+	background-color: #dcdcdc;
 }
 
-.header-contents {
-	margin-left: 20px;
+header {
+    position: fixed;
+    background-color: #dcdcdc;
+    width: 98%;
+    top: 0;
+    z-index: 10000;
 }
 
-.main-contents {
-	margin: 20px;
-	padding: 10px 10px 5px 10px;
-	background-color: #FFFFDD;
-	height: 100%;
-	width: 80%;
+main {
+    padding-top: 200px;
 }
 
-.footer-contents {
-	margin-left: 20px;
+h1 {
+    text-align: center;
+}
+
+h2 {
+    text-align: left;
+}
+
+label {
+	display: block;
 }
 
 button {
 	margin-bottom: 5px;
 }
 
-.form-area {
-	margin: 10px;
-	padding: 10px;
-	background-color: white;
+hr {
+    border: none;
+    border-top: 1px dotted #999;
 }
 
-label {
-	display: block;
+
+.header-contents {
+    text-align:right;
+	margin-left: 100px;
+	margin-right: 70px;
+}
+
+.logout {
+    color: white;
+}
+
+.logout:visited {
+    color:#000080;
+}
+
+.logout:hover {
+    color:#800000;
+}
+
+.menu {
+    positon: fixed;
+    top:0;
+    left:0;
+    padding: 5px;
+    font-size: 20px;
+    background-color: #696969;
+}
+
+.menu ul {
+    display: flex;
+}
+.menu li {
+    list-style: none;
+}
+
+.menu a {
+    display: block;
+    text-decoration: none;
+    color: white;
+    margin-right: 35px;
+}
+
+.menu a:hover {
+    color: #000080;
+}
+
+.menu a:hover {
+    color: #800000;
 }
 
 .errorMessages {
@@ -40,47 +93,87 @@ label {
 	color: red;
 }
 
-table, td, th {
-    border: 1px solid #000;
+.main-contents {
+	margin: 20px auto;
+	padding: 10px 10px 5px 10px;
+	background-color: #dcdcdc;
+	height: 100%;
+	width: 80%;
 }
 
+.message-icon {
+    background-color: white;
+    margin: 10px auto 20px;
+    padding: 10px;
+    border-radius: 20px
+}
 .content {
-    width: 240px;
-    display: inline-block;
+    font-size: 20px;
+    display: block;
     word-wrap: break-word;
     white-space: pre-wrap;  /* 改行や空白を保ちつつ折り返す */
 }
 
-.status {
-    width: 160px;
-    text-align: center;
+.message-info {
+    font-size: 14px;
+    text-align: right;
 }
 
-.before-limit {
-    width: 240px;
-    background-color: #CDE6C7;
-    text-align: center;
+.form-area {
+	margin: 10px;
+	padding: 10px;
+	background-color: white;
 }
 
-.on-limit {
-    width: 240px;
-    background-color: #FFEF6C;
-    text-align: center;
+.new-form-area{
+    text-align: left;
+    margin-left: 60;
+    padding: 10px;
+    background-color: white;
 }
 
-.after-limit {
-    width: 240px;
-    background-color: #FF6666;
-    text-align: center;
+.text-box {
+    width: 600px;
+    height: 100px
 }
 
-.task-button {
-    width: 80px;
-    text-align: center;
+.delete-button {
+    text-align: right;
 }
 
-.menu {
-    positon: fixed;
-    top:0;
-    left:0;
+.footer-contents {
+	margin-left: 60px;
+
+}
+
+.return-button {
+    margin-left: 100px;
+}
+
+.arrow {
+  position: relative;
+  display: inline-block;
+  width: 7.7px;
+  height: 13.3px;
+}
+
+.arrow::before,
+.arrow::after {
+  content: "";
+  position: absolute;
+  top: calc(50% - 1px);
+  right: 0;
+  width: 10px;
+  height: 2px;
+  border-radius: 9999px;
+  background-color: #000000;
+  transform-origin: calc(100% - 1px) 50%;
+}
+
+.arrow::before {
+  transform: rotate(45deg);
+}
+
+.arrow::after {
+  transform: rotate(-45deg);
 }
