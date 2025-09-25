@@ -19,7 +19,7 @@ public class LoginFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
-        //ServletRequest→「Http」ServletRequsetへ型変換
+        //ServletRequest→「Http」ServletRequestへ型変換
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         HttpSession session = httpRequest.getSession(false);
@@ -37,7 +37,6 @@ public class LoginFilter implements Filter {
         }
     }
 
-    @Override
     public void init(FilterConfig filterConfig) throws ServletException {
     }
 
