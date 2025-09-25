@@ -1,5 +1,6 @@
 package com.example.SMG_BBS.controller.form;
 
+import com.example.SMG_BBS.validation.EditValidation;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/style.css}" rel="styleSheet">
+    <title>ログインページ</title>
+</head>
+<body>
+<div class="header-contents">
+    <h2>ログインページ</h2>
+</div>
+<div class="main-contents">
+    <div th:if="${param.error}">
+        <div th:if="${session.containsKey('SPRING_SECURITY_LAST_EXCEPTION')}">
+            <div class="alert alert-danger">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <span th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}"></span>
+            </div>
+        </div>
+    </div>
+    <form th:action="@{/login}" method="post">
+        <label>アカウント名</label><br/>
+        <div>
+            <input type="text" name="username" required/>
+        </div>
+        <label>パスワード</label><br/>
+        <div>
+            <input type="password" name="password" required/>
+        </div>
+        <input type="submit" value="ログイン"/>
+    </form>
+</div>
+<div class="footer-contents">
+</div>
+</body>
+</html>

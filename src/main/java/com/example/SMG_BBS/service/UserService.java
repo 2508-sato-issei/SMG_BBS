@@ -4,6 +4,7 @@ import com.example.SMG_BBS.controller.form.UserForm;
 import com.example.SMG_BBS.repository.UserRepository;
 import com.example.SMG_BBS.repository.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -17,10 +18,26 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     /*
      * レコード追加、ユーザー復活・停止フラグの更新
      */
     public void saveUser(UserForm reqUser) {
+
+        // 新規投稿の場合 または パスワード更新有の場合
+        if (reqUser.getId() == null || (!reqUser.getPassword().isBlank() && reqUser.getIsStopped() == 0)) {
+            String rawPassword = reqUser.getPassword();
+            String encodedPassword = passwordEncoder.encode(rawPassword);
+            reqUser.setPassword(encodedPassword);
+        }
+
+        if (reqUser.getId() != null && reqUser.getPassword().isBlank()) {
+            User user = userRepository.findById(reqUser.getId()).orElse(null);
+            reqUser.setPassword(user.getPassword());
+        }
+
         User saveUser = setUserEntity(reqUser);
         userRepository.save(saveUser);
     }
