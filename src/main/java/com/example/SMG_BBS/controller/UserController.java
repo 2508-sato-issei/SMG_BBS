@@ -1,12 +1,14 @@
 package com.example.SMG_BBS.controller;
 
 import com.example.SMG_BBS.controller.form.EditValidation;
+import com.example.SMG_BBS.config.LoginUserDetails;
 import com.example.SMG_BBS.controller.form.UserForm;
 import com.example.SMG_BBS.repository.entity.User;
 import com.example.SMG_BBS.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -80,7 +82,7 @@ public class UserController {
             );
             String branchId = userForm.getBranchId().toString();
             String departmentId = userForm.getDepartmentId().toString();
-            if (!allowedCombinations.containsKey(branchId) && allowedCombinations.get(branchId).contains(departmentId)) {
+            if (!(allowedCombinations.containsKey(branchId) && allowedCombinations.get(branchId).contains(departmentId))) {
                 FieldError fieldError = new FieldError(result.getObjectName(),
                         "branchId", "支社と部署の組み合わせが不正です");
                 result.addError(fieldError);
@@ -95,18 +97,19 @@ public class UserController {
         }
 
         userService.saveUser(userForm);
-        return new ModelAndView("redirect:/user");
+        return new ModelAndView("redirect:/user/management");
     }
 
     /*
      * ユーザー管理画面表示
      */
-    @GetMapping("/user")
+    @GetMapping("/user/management")
     public ModelAndView userManage(HttpSession session, RedirectAttributes redirectAttributes) {
 
         // セッションからログインユーザ情報を取得
         UserForm user = (UserForm) session.getAttribute("loginUser");
 
+        /*
         // ログインユーザーの部署チェック（総務人事部(=1)以外ならエラー）
         if (user == null || user.getDepartmentId() != 1) {
             List<String> errorMessages = new ArrayList<>();
@@ -114,13 +117,14 @@ public class UserController {
             redirectAttributes.addFlashAttribute("errorMessages", errorMessages);
             return new ModelAndView("redirect:/");
         }
+         */
 
         ModelAndView mav = new ModelAndView();
         // ユーザー情報の全件取得
         List<UserForm> users = userService.findAll();
 
         // ユーザー管理画面表示
-        mav.setViewName("/user");
+        mav.setViewName("user/management");
         mav.addObject("users", users);
         return mav;
 
@@ -130,13 +134,14 @@ public class UserController {
      * ユーザー編集画面表示
      */
     @GetMapping("/user/edit/{id}")
-    public ModelAndView userEdit(@PathVariable String id,
+    public ModelAndView userEdit(@AuthenticationPrincipal LoginUserDetails loginUser,
+                                 @PathVariable String id,
                                  HttpSession session,
                                  RedirectAttributes redirectAttributes) {
         List<String> errorMessages = new ArrayList<>();
 
         // セッションからログインユーザ情報を取得
-        UserForm loginUser = (UserForm) session.getAttribute("loginUser");
+//        UserForm loginUser = (UserForm) session.getAttribute("loginUser");
 
         // ログインユーザーの部署チェック（総務人事部(=1)以外ならエラー）
         // 権限のないユーザーまたは未ログインユーザーがURLに直打ちしてアクセスしたときに排除する
@@ -175,7 +180,7 @@ public class UserController {
         user.setIsStopped(isStopped);
         userService.saveUser(user);
 
-        return new ModelAndView("redirect:/user");
+        return new ModelAndView("redirect:/user/management");
     }
 
     /*
@@ -244,6 +249,6 @@ public class UserController {
 
         userService.saveUser(userForm);
 
-        return new ModelAndView("redirect:/user");
+        return new ModelAndView("redirect:/user/management");
     }
 }
