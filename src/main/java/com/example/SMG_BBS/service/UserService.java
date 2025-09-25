@@ -95,7 +95,7 @@ public class UserService {
     /*
      * ユーザー編集画面でのユーザー情報を取得
      */
-    public UserForm findUser(Integer id) {
+    public UserForm selectUserById(Integer id) {
         List<User> results = new ArrayList<>();
         results.add(userRepository.findById(id).orElse(null));
         List<UserForm> users = setUserForm(results);

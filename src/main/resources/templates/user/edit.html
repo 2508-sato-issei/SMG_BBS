@@ -16,10 +16,19 @@
     </div>
     <!-- ユーザー情報入力欄 -->
     <form th:action="@{/user/update/{id}(id=${formModel.id})}" th:method="put" th:object="${formModel}">
+        <div class="errorMessages">
+            <div th:if="${#fields.hasErrors('account')}" th:errors="*{account}"></div>
+            <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+            <div th:if="${#fields.hasErrors('branchId')}" th:errors="*{branchId}"></div>
+            <div th:if="${#fields.hasErrors('departmentId')}" th:errors="*{departmentId}"></div>
+        </div>
         <label>アカウント名</label>
-        <input th:field="*{account}"/>
+        <input th:field="*{account}" th:value="*{account}"/>
         <label>パスワード</label>
-        <input id="password" name="password">
+        <input type="password" name="password">
+        <label>確認用パスワード</label>
+        <input type="password" name="confirmationPassword">
         <label>氏名</label>
         <input th:field="*{name}"/>
         <label>本社/支社名</label>

@@ -15,23 +15,23 @@ public class UserForm {
 
     private Integer id;
 
-    @NotEmpty(message = "アカウントを入力してください")
-    @Pattern(regexp = "^$|[a-zA-Z0-9]{6,20}$", message = "アカウントは半角英数字かつ6文字以上20文字以下で入力してください")
+    @NotEmpty(message = "アカウントを入力してください", groups = {EditValidation.class})
+    @Pattern(regexp = "^$|[a-zA-Z0-9]{6,20}$", message = "アカウントは半角英数字かつ6文字以上20文字以下で入力してください", groups = {EditValidation.class})
     private String account;
 
     @NotEmpty(message = "パスワードを入力してください")
-    @Pattern(regexp = "^$|[\\x21-\\x7E]{6,20}$", message = "パスワードは半角文字かつ6文字以上20文字以下で入力してください")
+    @Pattern(regexp = "^$|[\\x21-\\x7E]{6,20}$", message = "パスワードは半角文字かつ6文字以上20文字以下で入力してください", groups = {EditValidation.class})
     private String password;
 
-    @NotEmpty(message = "氏名を入力してください")
-    @Pattern(regexp = "^$|.*[^\\s　].*", message = "氏名を入力してください")
-    @Size(min = 0, max = 10, message = "氏名は10文字以下で入力してください")
+    @NotEmpty(message = "氏名を入力してください", groups = {EditValidation.class})
+    @Pattern(regexp = "^$|.*[^\\s　].*", message = "氏名を入力してください", groups = {EditValidation.class})
+    @Size(min = 0, max = 10, message = "氏名は10文字以下で入力してください", groups = {EditValidation.class})
     private String name;
 
-    @NotNull(message = "支社を選択してください")
+    @NotNull(message = "支社を選択してください", groups = {EditValidation.class})
     private Integer branchId;
 
-    @NotNull(message = "部署を選択してください")
+    @NotNull(message = "部署を選択してください", groups = {EditValidation.class})
     private Integer departmentId;
 
     private int isStopped;
