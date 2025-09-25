@@ -27,7 +27,7 @@ public class Message {
     private String category;
 
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(insertable = false, updatable = false)

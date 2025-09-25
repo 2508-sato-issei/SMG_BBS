@@ -1,7 +1,9 @@
 package com.example.SMG_BBS.controller;
 
 import com.example.SMG_BBS.controller.form.CommentForm;
+import com.example.SMG_BBS.controller.form.UserCommentForm;
 import com.example.SMG_BBS.controller.form.UserMessageForm;
+import com.example.SMG_BBS.service.CommentService;
 import com.example.SMG_BBS.service.MessageService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ public class TopController {
 
     @Autowired
     MessageService messageService;
+    @Autowired
+    CommentService commentService;
 
     /*
      * Top画面表示
@@ -38,8 +42,11 @@ public class TopController {
 //            isShowButton = true;
 //        }
 
-        //投稿情報取得
+        // 投稿情報取得
         List<UserMessageForm> messages = messageService.findMessage(startDate, endDate, category);
+
+        // コメント情報取得
+        List<UserCommentForm> comments = commentService.findComment();
 
         //modelにformModelが存在しないとき空のcommentFormをviewに渡す
         if(!model.containsAttribute("formModel")){
@@ -50,6 +57,7 @@ public class TopController {
         mav.setViewName("/top");
 //        mav.addObject("isShowButton", isShowButton);
         mav.addObject("messages", messages);
+        mav.addObject("comments", comments);
         mav.addObject("startDate", startDate);
         mav.addObject("endDate", endDate);
         mav.addObject("category", category);

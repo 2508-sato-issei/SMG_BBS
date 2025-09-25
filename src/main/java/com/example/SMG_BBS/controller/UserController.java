@@ -3,10 +3,10 @@ package com.example.SMG_BBS.controller;
 import com.example.SMG_BBS.controller.form.UserForm;
 import com.example.SMG_BBS.repository.entity.User;
 import com.example.SMG_BBS.service.UserService;
-import com.example.SMG_BBS.utils.CipherUtil;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,8 +20,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@PreAuthorize("hasRole('ADMIN')")
 @Controller
 public class UserController {
+
     @Autowired
     UserService userService;
 
@@ -93,23 +95,23 @@ public class UserController {
         }
 
         userService.saveUser(userForm);
-        return new ModelAndView("redirect:manage");
+        return new ModelAndView("redirect:user");
     }
 
     /*
      * ユーザー管理画面表示
      */
     @GetMapping("/user")
-    public ModelAndView userManage(HttpSession session, RedirectAttributes redirectAttributes){
+    public ModelAndView userManage(HttpSession session, RedirectAttributes redirectAttributes) {
 
         // セッションからログインユーザ情報を取得
         UserForm user = (UserForm) session.getAttribute("loginUser");
 
         // ログインユーザーの部署チェック（総務人事部(=1)以外ならエラー）
-        if(user == null || user.getDepartmentId() != 1){
+        if (user == null || user.getDepartmentId() != 1) {
             List<String> errorMessages = new ArrayList<>();
             errorMessages.add("無効なアクセスです");
-            redirectAttributes.addFlashAttribute("errorMessages",errorMessages);
+            redirectAttributes.addFlashAttribute("errorMessages", errorMessages);
             return new ModelAndView("redirect:/");
         }
 
@@ -130,7 +132,7 @@ public class UserController {
     @GetMapping("/user/edit/{id}")
     public ModelAndView userEdit(@PathVariable String id,
                                  HttpSession session,
-                                 RedirectAttributes redirectAttributes){
+                                 RedirectAttributes redirectAttributes) {
         List<String> errorMessages = new ArrayList<>();
 
         // セッションからログインユーザ情報を取得
@@ -138,14 +140,14 @@ public class UserController {
 
         // ログインユーザーの部署チェック（総務人事部(=1)以外ならエラー）
         // 権限のないユーザーまたは未ログインユーザーがURLに直打ちしてアクセスしたときに排除する
-        if(loginUser.getDepartmentId() != 1){
+        if (loginUser.getDepartmentId() != 1) {
             errorMessages.add("無効なアクセスです");
-            redirectAttributes.addFlashAttribute("errorMessages",errorMessages);
+            redirectAttributes.addFlashAttribute("errorMessages", errorMessages);
             return new ModelAndView("redirect:/");
         }
 
         // 取得したユーザーIDをチェック
-        if(id == null || id.trim().isEmpty() || !id.matches("^[0-9]+$")) {
+        if (id == null || id.trim().isEmpty() || !id.matches("^[0-9]+$")) {
             errorMessages.add("不正なパラメータが入力されました");
             redirectAttributes.addFlashAttribute("errorMessages", errorMessages);
             return new ModelAndView("redirect:/");
@@ -181,20 +183,20 @@ public class UserController {
     @PutMapping("/user/update/{id}")
     public ModelAndView updateUser(@PathVariable Integer id,
                                    @ModelAttribute("formModel") UserForm userForm) {
+/*
         // 既存のレコードを取得
         UserForm user = userService.findUser(id);
         // パスワードが入力されていない場合は既存レコードのパスワードをFormにセット
-        if(userForm.getPassword().isBlank()) {
+        if (userForm.getPassword().isBlank()) {
             userForm.setPassword(user.getPassword());
         } else {
             // パスワードを暗号化
             String encPassword = CipherUtil.encrypt(userForm.getPassword());
             userForm.setPassword(encPassword);
         }
-
+*/
         userService.saveUser(userForm);
 
         return new ModelAndView("redirect:/user");
     }
 }
-
