@@ -16,11 +16,11 @@
             <div th:if="${#fields.hasErrors('text')}" th:errors="*{text}"></div>
             <div th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></div>
         </div>
-        <div class="from-area">
+        <div class="new-form-area">
             <label>タイトル</label><br/>
             <textarea th:field="*{title}" size="20" maxlength="200"></textarea><br/>
             <label>投稿内容</label><br/>
-            <textarea th:field="*{text}" size="20" maxlength="200"></textarea><br/>
+            <textarea class="text-box" th:field="*{text}" size="20" maxlength="200"></textarea><br/>
             <label>カテゴリ</label><br/>
             <textarea th:field="*{category}" size="20" maxlength="200"></textarea><br/>
             <input type="submit" value="登録"/>
@@ -28,9 +28,11 @@
     </form>
 </div>
 <div class="footer-contents">
-    <form action="/">
-        <input type="submit" value="戻る"/>
-    </form>
+    <div class="return-button">
+        <form action="/">
+            <input type="submit" value="戻る"/>
+        </form>
+    </div>
 </div>
 </body>
 </html>
