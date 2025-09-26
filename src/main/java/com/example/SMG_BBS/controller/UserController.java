@@ -233,7 +233,7 @@ public class UserController {
             );
             String branchId = userForm.getBranchId().toString();
             String departmentId = userForm.getDepartmentId().toString();
-            if (!allowedCombinations.containsKey(branchId) && allowedCombinations.get(branchId).contains(departmentId)) {
+            if (!(allowedCombinations.containsKey(branchId) && allowedCombinations.get(branchId).contains(departmentId))) {
                 FieldError fieldError = new FieldError(result.getObjectName(),
                         "branchId", "支社と部署の組み合わせが不正です");
                 result.addError(fieldError);

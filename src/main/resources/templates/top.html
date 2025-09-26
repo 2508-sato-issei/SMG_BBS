@@ -52,7 +52,7 @@
                         / 投稿日時 : <span th:text="${#dates.format(message.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
                     </div>
                     <!--投稿削除ボタン-->
-                    <!--<div th:if="${session.loginUser.id == message.userId}">-->
+                    <!--<div th:if="${loginUser.id == message.userId}">-->
                         <form class="delete-button" th:action="@{/message/delete/{id}(id=${message.id})}" th:method="delete">
                             <input type="submit" value="削除">
                         </form>
@@ -66,12 +66,11 @@
                                 <span th:text="${comment.text}"></span>
                             </div>
                             <div class="message-info">
-                                投稿者 : <span th:text="${message.user.name}"></span>
-                                / カテゴリ : <span th:text="${message.category}"></span>
-                                / 投稿日時 : <span th:text="${#dates.format(message.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                                投稿者 : <span th:text="${comment.user.name}"></span>
+                                / 投稿日時 : <span th:text="${#dates.format(comment.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
                             </div>
                             <!--コメント削除ボタン-->
-                            <!--<div th:if="${session.loginUser.id == comment.userId}">-->
+                            <!--<div th:if="${loginUser.id == comment.userId}">-->
                             <form th:action="@{/comment/delete/{id}(id=${comment.id})}" th:method="delete" onSubmit="return CheckDelete()">
                                 <input type="submit" value="削除">
                             </form>
