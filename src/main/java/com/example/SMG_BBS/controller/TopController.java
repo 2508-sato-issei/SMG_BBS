@@ -1,14 +1,17 @@
 package com.example.SMG_BBS.controller;
 
+import com.example.SMG_BBS.security.LoginUserDetails;
 import com.example.SMG_BBS.controller.form.CommentForm;
+import com.example.SMG_BBS.controller.form.UserCommentForm;
 import com.example.SMG_BBS.controller.form.UserMessageForm;
+import com.example.SMG_BBS.service.CommentService;
 import com.example.SMG_BBS.service.MessageService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -19,37 +22,45 @@ public class TopController {
 
     @Autowired
     MessageService messageService;
+    @Autowired
+    CommentService commentService;
 
     /*
      * Top画面表示
      */
     @GetMapping
-    public ModelAndView top(HttpSession session,
+    public ModelAndView top(@AuthenticationPrincipal LoginUserDetails loginUser,
+                            HttpSession session,
                             @RequestParam(required = false) String startDate,
                             @RequestParam(required = false) String endDate,
                             @RequestParam(required = false) String category,
-                            Model model){
+                            Model model) {
         ModelAndView mav = new ModelAndView();
 
-//        //loginUserの部署IDが総務人事部ならばボタン表示フラグON
-//        boolean isShowButton = false;
-//        UserForm user = (UserForm)session.getAttribute("loginUser");
-//        if(user.getDepartmentId() == 1){
-//            isShowButton = true;
-//        }
 
-        //投稿情報取得
+        //loginUserの部署IDが総務人事部ならばボタン表示フラグON
+        boolean isShowButton = false;
+//        UserForm user = (UserForm) session.getAttribute("loginUser");
+        if (loginUser.getDepartmentId() == 1) {
+            isShowButton = true;
+        }
+
+        // 投稿情報取得
         List<UserMessageForm> messages = messageService.findMessage(startDate, endDate, category);
 
+        // コメント情報取得
+        List<UserCommentForm> comments = commentService.findComment();
+
         //modelにformModelが存在しないとき空のcommentFormをviewに渡す
-        if(!model.containsAttribute("formModel")){
+        if (!model.containsAttribute("formModel")) {
             CommentForm commentForm = new CommentForm();
             mav.addObject("formModel", commentForm);
         }
 
-        mav.setViewName("/top");
-//        mav.addObject("isShowButton", isShowButton);
+        mav.setViewName("top");
+        mav.addObject("isShowButton", isShowButton);
         mav.addObject("messages", messages);
+        mav.addObject("comments", comments);
         mav.addObject("startDate", startDate);
         mav.addObject("endDate", endDate);
         mav.addObject("category", category);
@@ -57,10 +68,12 @@ public class TopController {
     }
 
     // ログアウト機能
-    @PostMapping("/logout")
+    /*@GetMapping("/logout")
     public ModelAndView logout(HttpSession session) {
 
         session.invalidate();
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/login");
     }
+     */
+
 }

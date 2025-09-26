@@ -1,16 +1,19 @@
 package com.example.SMG_BBS.controller;
 
+import com.example.SMG_BBS.security.LoginUserDetails;
+import com.example.SMG_BBS.validation.EditValidation;
 import com.example.SMG_BBS.controller.form.UserForm;
 import com.example.SMG_BBS.repository.entity.User;
 import com.example.SMG_BBS.service.UserService;
-import com.example.SMG_BBS.utils.CipherUtil;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -22,6 +25,7 @@ import java.util.Set;
 
 @Controller
 public class UserController {
+
     @Autowired
     UserService userService;
 
@@ -78,7 +82,7 @@ public class UserController {
             );
             String branchId = userForm.getBranchId().toString();
             String departmentId = userForm.getDepartmentId().toString();
-            if (!allowedCombinations.containsKey(branchId) && allowedCombinations.get(branchId).contains(departmentId)) {
+            if (!(allowedCombinations.containsKey(branchId) && allowedCombinations.get(branchId).contains(departmentId))) {
                 FieldError fieldError = new FieldError(result.getObjectName(),
                         "branchId", "支社と部署の組み合わせが不正です");
                 result.addError(fieldError);
@@ -93,32 +97,34 @@ public class UserController {
         }
 
         userService.saveUser(userForm);
-        return new ModelAndView("redirect:manage");
+        return new ModelAndView("redirect:/user/management");
     }
 
     /*
      * ユーザー管理画面表示
      */
-    @GetMapping("/user")
-    public ModelAndView userManage(HttpSession session, RedirectAttributes redirectAttributes){
+    @GetMapping("/user/management")
+    public ModelAndView userManage(HttpSession session, RedirectAttributes redirectAttributes) {
 
         // セッションからログインユーザ情報を取得
         UserForm user = (UserForm) session.getAttribute("loginUser");
 
+        /*
         // ログインユーザーの部署チェック（総務人事部(=1)以外ならエラー）
-        if(user == null || user.getDepartmentId() != 1){
+        if (user == null || user.getDepartmentId() != 1) {
             List<String> errorMessages = new ArrayList<>();
             errorMessages.add("無効なアクセスです");
-            redirectAttributes.addFlashAttribute("errorMessages",errorMessages);
+            redirectAttributes.addFlashAttribute("errorMessages", errorMessages);
             return new ModelAndView("redirect:/");
         }
+         */
 
         ModelAndView mav = new ModelAndView();
         // ユーザー情報の全件取得
         List<UserForm> users = userService.findAll();
 
         // ユーザー管理画面表示
-        mav.setViewName("/user");
+        mav.setViewName("user/management");
         mav.addObject("users", users);
         return mav;
 
@@ -128,31 +134,32 @@ public class UserController {
      * ユーザー編集画面表示
      */
     @GetMapping("/user/edit/{id}")
-    public ModelAndView userEdit(@PathVariable String id,
+    public ModelAndView userEdit(@AuthenticationPrincipal LoginUserDetails loginUser,
+                                 @PathVariable String id,
                                  HttpSession session,
-                                 RedirectAttributes redirectAttributes){
+                                 RedirectAttributes redirectAttributes) {
         List<String> errorMessages = new ArrayList<>();
 
         // セッションからログインユーザ情報を取得
-        UserForm loginUser = (UserForm) session.getAttribute("loginUser");
+//        UserForm loginUser = (UserForm) session.getAttribute("loginUser");
 
         // ログインユーザーの部署チェック（総務人事部(=1)以外ならエラー）
         // 権限のないユーザーまたは未ログインユーザーがURLに直打ちしてアクセスしたときに排除する
-        if(loginUser.getDepartmentId() != 1){
+        if (loginUser.getDepartmentId() != 1) {
             errorMessages.add("無効なアクセスです");
-            redirectAttributes.addFlashAttribute("errorMessages",errorMessages);
+            redirectAttributes.addFlashAttribute("errorMessages", errorMessages);
             return new ModelAndView("redirect:/");
         }
 
         // 取得したユーザーIDをチェック
-        if(id == null || id.trim().isEmpty() || !id.matches("^[0-9]+$")) {
+        if (id == null || id.trim().isEmpty() || !id.matches("^[0-9]+$")) {
             errorMessages.add("不正なパラメータが入力されました");
             redirectAttributes.addFlashAttribute("errorMessages", errorMessages);
             return new ModelAndView("redirect:/");
         }
 
         // 編集対象のレコードを取得
-        UserForm user = userService.findUser(Integer.valueOf(id));
+        UserForm user = userService.selectUserById(Integer.valueOf(id));
 
         // 編集画面表示
         ModelAndView mav = new ModelAndView();
@@ -168,11 +175,12 @@ public class UserController {
     @PutMapping("/change/{id}")
     public ModelAndView isStoppedChange(@PathVariable Integer id,
                                         @RequestParam Integer isStopped) {
-        UserForm user = userService.findUser(id);
+
+        UserForm user = userService.selectUserById(id);
         user.setIsStopped(isStopped);
         userService.saveUser(user);
 
-        return new ModelAndView("redirect:/user");
+        return new ModelAndView("redirect:/user/management");
     }
 
     /*
@@ -180,21 +188,67 @@ public class UserController {
      */
     @PutMapping("/user/update/{id}")
     public ModelAndView updateUser(@PathVariable Integer id,
-                                   @ModelAttribute("formModel") UserForm userForm) {
-        // 既存のレコードを取得
-        UserForm user = userService.findUser(id);
-        // パスワードが入力されていない場合は既存レコードのパスワードをFormにセット
-        if(userForm.getPassword().isBlank()) {
-            userForm.setPassword(user.getPassword());
-        } else {
-            // パスワードを暗号化
-            String encPassword = CipherUtil.encrypt(userForm.getPassword());
-            userForm.setPassword(encPassword);
+                                   String account,
+                                   String confirmationPassword,
+                                   @ModelAttribute("formModel") @Validated(value = {EditValidation.class}) UserForm userForm,
+                                   BindingResult result) {
+
+        // IDから既存のレコードを取得
+//        UserForm user = userService.selectUserById(id);
+
+        // アカウントから既存レコードを取得
+        User duplicationUser = userService.selectUserByAccount(account);
+
+        // アカウント重複チェック(同一アカウントが存在し、かつユーザーIDが一致しない場合 ＝ 重複)
+        if(duplicationUser != null && duplicationUser.getId() != id) {
+            FieldError fieldError = new FieldError(result.getObjectName(),
+                    "account", "アカウントが重複しています");
+            result.addError(fieldError);
+        }
+
+        // パスワードとパスワード（確認用）の一致チェック
+        if (userForm.getPassword() != null) {
+            String password = userForm.getPassword();
+            if (!password.matches(confirmationPassword)) {
+                FieldError fieldError = new FieldError(result.getObjectName(),
+                        "password", "パスワードと確認用パスワードが一致しません");
+                result.addError(fieldError);
+//            } else {
+//                // パスワードを暗号化
+//                String encPassword = CipherUtil.encrypt(userForm.getPassword());
+//                userForm.setPassword(encPassword);
+            }
+//        } else {
+//            // パスワードが入力されていない場合は既存レコードのパスワードをFormにセット
+//            userForm.setPassword(user.getPassword());
+        }
+
+        // 支社と部署の組み合わせチェック
+        if (userForm.getBranchId() != null && userForm.getDepartmentId() != null) {
+            Map<String, Set<String>> allowedCombinations = Map.of(
+                    "1", Set.of("1", "2"),
+                    "2", Set.of("3", "4"),
+                    "3", Set.of("3", "4"),
+                    "4", Set.of("3", "4")
+            );
+            String branchId = userForm.getBranchId().toString();
+            String departmentId = userForm.getDepartmentId().toString();
+            if (!allowedCombinations.containsKey(branchId) && allowedCombinations.get(branchId).contains(departmentId)) {
+                FieldError fieldError = new FieldError(result.getObjectName(),
+                        "branchId", "支社と部署の組み合わせが不正です");
+                result.addError(fieldError);
+            }
+        }
+
+        if (result.hasErrors()) {
+            ModelAndView mav = new ModelAndView();
+            mav.addObject("formModel", userForm);
+            mav.setViewName("user/edit");
+            return mav;
         }
 
         userService.saveUser(userForm);
 
-        return new ModelAndView("redirect:/user");
+        return new ModelAndView("redirect:/user/management");
     }
 }
-

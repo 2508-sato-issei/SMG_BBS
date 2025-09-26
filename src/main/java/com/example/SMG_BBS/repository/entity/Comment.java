@@ -20,8 +20,9 @@ public class Comment {
     @Column
     private String text;
 
-    @Column
-    private int userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column
     private int messageId;
