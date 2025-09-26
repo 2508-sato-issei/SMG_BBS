@@ -53,7 +53,8 @@
                     </div>
                     <!--投稿削除ボタン-->
                     <!--<div th:if="${loginUser.id == message.userId}">-->
-                        <form class="delete-button" th:action="@{/message/delete/{id}(id=${message.id})}" th:method="delete">
+                        <form class="delete-button" th:action="@{/message/delete/{id}(id=${message.id})}" th:method="delete" onSubmit="return CheckDelete()">
+                            <input type="hidden" name="userId" th:value="${message.user.id}">
                             <input type="submit" value="削除">
                         </form>
                     <!--</div>-->
@@ -85,7 +86,7 @@
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                             <div class="form-area">
                                 <div th:if="${errorId == message.id}" class="errorMessages" th:id="${#fields.hasErrors('text')}" th:errors="*{text}"></div>
-                                <textarea class="text-box" th:field="*{text}" size="20" maxlength="200"></textarea><br />
+                                <textarea class="text-box" th:field="*{text}" size="20"></textarea><br />
                                 <input type="submit" value="返信" />
                             </div>
                         </form>

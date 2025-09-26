@@ -1,10 +1,8 @@
 package com.example.SMG_BBS.controller;
 
-import com.example.SMG_BBS.security.LoginUserDetails;
 import com.example.SMG_BBS.controller.form.MessageForm;
-import com.example.SMG_BBS.controller.form.UserForm;
+import com.example.SMG_BBS.security.LoginUserDetails;
 import com.example.SMG_BBS.service.MessageService;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -65,12 +63,11 @@ public class MessageController {
      */
     @DeleteMapping("/message/delete/{id}")
     public ModelAndView deleteMessage(@PathVariable Integer id,
+                                      @RequestParam Integer userId,
+                                      @AuthenticationPrincipal LoginUserDetails loginUser,
                                       @ModelAttribute("formModel") MessageForm messageForm,
-                                      HttpSession httpSession,
                                       RedirectAttributes redirectAttributes) {
 
-        Integer userId = messageForm.getUserId();
-        UserForm loginUser = (UserForm) httpSession.getAttribute("loginUser");
         Integer loginUserId = loginUser.getId();
 
         // 削除権限判定
