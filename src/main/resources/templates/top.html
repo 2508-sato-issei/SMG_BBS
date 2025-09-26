@@ -27,6 +27,11 @@
     </header>
     <main>
         <div class="main-contents">
+            <div th:if="${errorMessage}">
+                <div class="errorMessages">
+                    <span th:text="${errorMessage}"></span>
+                </div>
+            </div>
             <div class="errorMessages" th:if="${errorMessages != null}">
                 <div th:each="errorMessage : ${errorMessages}" th:text="${errorMessages}"></div>
             </div>

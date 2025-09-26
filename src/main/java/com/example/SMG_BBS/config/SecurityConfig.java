@@ -19,7 +19,7 @@ public class SecurityConfig {
                                            CustomAccessDeniedHandler accessDeniedHandler) throws Exception {
         http
                 .formLogin(login -> login.loginPage("/login").permitAll())
-                .logout(logout -> logout.logoutSuccessUrl("/login?logout"))
+                .logout(logout -> logout.logoutSuccessUrl("/login").clearAuthentication(true))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**").permitAll()
                         .requestMatchers("/user/**").hasRole("ADMIN")

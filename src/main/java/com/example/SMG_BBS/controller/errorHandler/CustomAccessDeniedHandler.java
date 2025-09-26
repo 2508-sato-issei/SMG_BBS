@@ -1,6 +1,5 @@
 package com.example.SMG_BBS.controller.errorHandler;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.AccessDeniedException;
@@ -15,11 +14,10 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request,
                        HttpServletResponse response,
-                       AccessDeniedException accessDeniedException)
-            throws IOException, ServletException {
+                       AccessDeniedException accessDeniedException) throws IOException {
 
-        request.setAttribute("errorMessage", "不正なアクセスです");
-        request.getRequestDispatcher("/access-denied").forward(request, response);
+        request.getSession().setAttribute("errorMessage", "無効なアクセスです");
+        response.sendRedirect("/");
     }
 
 }

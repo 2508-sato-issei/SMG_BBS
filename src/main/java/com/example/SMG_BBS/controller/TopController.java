@@ -1,9 +1,9 @@
 package com.example.SMG_BBS.controller;
 
-import com.example.SMG_BBS.security.LoginUserDetails;
 import com.example.SMG_BBS.controller.form.CommentForm;
 import com.example.SMG_BBS.controller.form.UserCommentForm;
 import com.example.SMG_BBS.controller.form.UserMessageForm;
+import com.example.SMG_BBS.security.LoginUserDetails;
 import com.example.SMG_BBS.service.CommentService;
 import com.example.SMG_BBS.service.MessageService;
 import jakarta.servlet.http.HttpSession;
@@ -37,10 +37,8 @@ public class TopController {
                             Model model) {
         ModelAndView mav = new ModelAndView();
 
-
         //loginUserの部署IDが総務人事部ならばボタン表示フラグON
         boolean isShowButton = false;
-//        UserForm user = (UserForm) session.getAttribute("loginUser");
         if (loginUser.getDepartmentId() == 1) {
             isShowButton = true;
         }
@@ -57,6 +55,13 @@ public class TopController {
             mav.addObject("formModel", commentForm);
         }
 
+        // 管理者権限フィルターのエラーメッセージ処理
+        String errorMessage = (String) session.getAttribute("errorMessage");
+        if (errorMessage != null) {
+            mav.addObject("errorMessage", errorMessage);
+            session.removeAttribute("errorMessage");
+        }
+
         mav.setViewName("top");
         mav.addObject("isShowButton", isShowButton);
         mav.addObject("messages", messages);
@@ -66,14 +71,5 @@ public class TopController {
         mav.addObject("category", category);
         return mav;
     }
-
-    // ログアウト機能
-    /*@GetMapping("/logout")
-    public ModelAndView logout(HttpSession session) {
-
-        session.invalidate();
-        return new ModelAndView("redirect:/login");
-    }
-     */
 
 }
