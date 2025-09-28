@@ -5,7 +5,6 @@ import com.example.SMG_BBS.validation.EditValidation;
 import com.example.SMG_BBS.controller.form.UserForm;
 import com.example.SMG_BBS.repository.entity.User;
 import com.example.SMG_BBS.service.UserService;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

@@ -72,7 +72,7 @@ public class UserService {
      * ユーザー情報一覧を取得
      */
     public List<UserForm> findAll() {
-        List<User> results = userRepository.findAll();
+        List<User> results = userRepository.findAllByOrderByIdAsc();
         return setUserForm(results);
     }
 
@@ -99,9 +99,17 @@ public class UserService {
      * ユーザー編集画面でのユーザー情報を取得
      */
     public UserForm selectUserById(Integer id) {
-        List<User> results = new ArrayList<>();
-        results.add(userRepository.findById(id).orElse(null));
-        List<UserForm> users = setUserForm(results);
-        return users.get(0);
+
+        User userResult = userRepository.findById(id).orElse(null);
+
+        // レコードの存在チェック（存在しないIDをURLに直接入力した場合のバリデーション）
+        if(userResult == null){
+            return null;
+        } else {
+            List<User> results = new ArrayList<>();
+            results.add(userResult);
+            List<UserForm> users = setUserForm(results);
+            return users.get(0);
+        }
     }
 }
