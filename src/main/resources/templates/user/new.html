@@ -22,13 +22,13 @@
         </div>
         <div class="new-form-area">
             <label>アカウント</label>
-            <textarea th:field="*{account}" size="20" maxlength="200"></textarea><br/>
+            <input type="text" th:field="*{account}"/><br/>
             <label>パスワード</label>
-            <input type="password" th:field="*{password}"/><br/>
+            <input type="text" th:field="*{password}"/><br/>
             <label>パスワード（確認用）</label>
-            <input type="password" name="confirmationPassword" th:value="${confirmationPassword}"><br/>
+            <input type="text" name="confirmationPassword" th:value="${confirmationPassword}"><br/>
             <label>氏名</label>
-            <textarea th:field="*{name}" size="20" maxlength="200"></textarea><br/>
+            <input type="text" th:field="*{name}"/><br/>
             <label>支社</label>
             <select th:field="*{branchId}">
                 <option value="" selected></option>
