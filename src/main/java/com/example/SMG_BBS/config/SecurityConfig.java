@@ -1,5 +1,7 @@
 package com.example.SMG_BBS.config;
 
+import com.example.SMG_BBS.controller.errorHandler.CustomAccessDeniedHandler;
+import com.example.SMG_BBS.controller.errorHandler.CustomAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,8 +14,12 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.formLogin(login -> login.loginPage("/login").permitAll())
+    public SecurityFilterChain filterChain(HttpSecurity http,
+                                           CustomAuthenticationEntryPoint authenticationEntryPoint,
+                                           CustomAccessDeniedHandler accessDeniedHandler) throws Exception {
+        http
+                .formLogin(login -> login.loginPage("/login").permitAll())
+                .logout(logout -> logout.logoutSuccessUrl("/login").clearAuthentication(true))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**").permitAll()
                         .requestMatchers("/user/**").hasRole("ADMIN")
@@ -21,9 +27,8 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(e -> e
-                        .accessDeniedHandler((request, response, accessDeniedException) -> {
-                            response.sendRedirect("/access-denied");
-                        })
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler)
                 );
         return http.build();
     }

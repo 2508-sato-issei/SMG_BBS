@@ -1,11 +1,11 @@
 package com.example.SMG_BBS.controller;
 
 import com.example.SMG_BBS.security.LoginUserDetails;
-import com.example.SMG_BBS.validation.EditValidation;
 import com.example.SMG_BBS.controller.form.UserForm;
 import com.example.SMG_BBS.repository.entity.User;
 import com.example.SMG_BBS.service.UserService;
-import jakarta.validation.Valid;
+import com.example.SMG_BBS.validation.CreateGroup;
+import jakarta.validation.groups.Default;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -50,7 +50,8 @@ public class UserController {
      */
     @PostMapping("/user/add")
     public ModelAndView addUser(String confirmationPassword,
-                                @ModelAttribute("formModel") @Valid UserForm userForm,
+                                @ModelAttribute("formModel")
+                                @Validated({Default.class, CreateGroup.class}) UserForm userForm,
                                 BindingResult result) {
 
         // アカウント重複チェック
@@ -190,7 +191,7 @@ public class UserController {
     public ModelAndView updateUser(@AuthenticationPrincipal LoginUserDetails loginUser,
                                    @PathVariable Integer id,
                                    String confirmationPassword,
-                                   @ModelAttribute("formModel") @Validated(value = {EditValidation.class}) UserForm userForm,
+                                   @ModelAttribute("formModel") @Validated({Default.class}) UserForm userForm,
                                    BindingResult result) {
 
         // アカウントから既存レコードを取得
@@ -242,4 +243,5 @@ public class UserController {
 
         return new ModelAndView("redirect:/user/management");
     }
+
 }
