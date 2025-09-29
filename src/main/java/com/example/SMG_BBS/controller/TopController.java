@@ -1,9 +1,9 @@
 package com.example.SMG_BBS.controller;
 
-import com.example.SMG_BBS.security.LoginUserDetails;
 import com.example.SMG_BBS.controller.form.CommentForm;
 import com.example.SMG_BBS.controller.form.UserCommentForm;
 import com.example.SMG_BBS.controller.form.UserMessageForm;
+import com.example.SMG_BBS.security.LoginUserDetails;
 import com.example.SMG_BBS.service.CommentService;
 import com.example.SMG_BBS.service.MessageService;
 import jakarta.servlet.http.HttpSession;
@@ -37,7 +37,6 @@ public class TopController {
                             Model model) {
         ModelAndView mav = new ModelAndView();
 
-
         //loginUserの部署IDが総務人事部ならばボタン表示フラグON
         boolean isShowButton = false;
         if (loginUser.getDepartmentId() == 1) {
@@ -54,6 +53,13 @@ public class TopController {
         if (!model.containsAttribute("formModel")) {
             CommentForm commentForm = new CommentForm();
             mav.addObject("formModel", commentForm);
+        }
+
+        // 管理者権限フィルターのエラーメッセージ処理
+        String errorMessage = (String) session.getAttribute("errorMessage");
+        if (errorMessage != null) {
+            mav.addObject("errorMessage", errorMessage);
+            session.removeAttribute("errorMessage");
         }
 
         mav.setViewName("top");

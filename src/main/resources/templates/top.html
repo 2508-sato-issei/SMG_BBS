@@ -27,6 +27,11 @@
     </header>
     <main>
         <div class="main-contents">
+            <div th:if="${errorMessage}">
+                <div class="errorMessages">
+                    <span th:text="${errorMessage}"></span>
+                </div>
+            </div>
             <div class="errorMessages" th:if="${errorMessages != null}">
                 <div th:each="errorMessage : ${errorMessages}" th:text="${errorMessages}"></div>
             </div>
@@ -54,6 +59,7 @@
                     <!--投稿削除ボタン-->
                     <div th:if="${loginUser.id == message.user.id}">
                         <form class="delete-button" th:action="@{/message/delete/{id}(id=${message.id})}" th:method="delete" onSubmit="return CheckDelete()">
+                            <input type="hidden" name="userId" th:value="${message.user.id}">
                             <input type="submit" value="削除">
                         </form>
                     </div>

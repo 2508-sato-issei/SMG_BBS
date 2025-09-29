@@ -10,12 +10,9 @@
     <h2 class="login-h2">ログインページ</h2>
 </div>
 <div class="main-contents">
-    <div th:if="${param.error}">
-        <div th:if="${session.containsKey('SPRING_SECURITY_LAST_EXCEPTION')}">
-            <div class="alert alert-danger">
-                <i class="bi bi-exclamation-triangle-fill"></i>
-                <span th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}"></span>
-            </div>
+    <div th:if="${errorMessage}">
+        <div class="errorMessages">
+            <span th:text="${errorMessage}"></span>
         </div>
     </div>
     <div class="login-form">

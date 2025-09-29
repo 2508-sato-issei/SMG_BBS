@@ -1,12 +1,12 @@
 package com.example.SMG_BBS.controller;
 
-import com.example.SMG_BBS.security.LoginUserDetails;
-import com.example.SMG_BBS.validation.EditValidation;
 import com.example.SMG_BBS.controller.form.UserForm;
 import com.example.SMG_BBS.repository.entity.User;
+import com.example.SMG_BBS.security.LoginUserDetails;
 import com.example.SMG_BBS.service.UserService;
+import com.example.SMG_BBS.validation.CreateGroup;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
+import jakarta.validation.groups.Default;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -51,7 +51,8 @@ public class UserController {
      */
     @PostMapping("/user/add")
     public ModelAndView addUser(String confirmationPassword,
-                                @ModelAttribute("formModel") @Valid UserForm userForm,
+                                @ModelAttribute("formModel")
+                                @Validated({Default.class, CreateGroup.class}) UserForm userForm,
                                 BindingResult result) {
 
         // アカウント重複チェック
@@ -190,7 +191,7 @@ public class UserController {
     public ModelAndView updateUser(@PathVariable Integer id,
                                    String account,
                                    String confirmationPassword,
-                                   @ModelAttribute("formModel") @Validated(value = {EditValidation.class}) UserForm userForm,
+                                   @ModelAttribute("formModel") @Validated({Default.class}) UserForm userForm,
                                    BindingResult result) {
 
         // IDから既存のレコードを取得
@@ -200,7 +201,7 @@ public class UserController {
         User duplicationUser = userService.selectUserByAccount(account);
 
         // アカウント重複チェック(同一アカウントが存在し、かつユーザーIDが一致しない場合 ＝ 重複)
-        if(duplicationUser != null && duplicationUser.getId() != id) {
+        if (duplicationUser != null && duplicationUser.getId() != id) {
             FieldError fieldError = new FieldError(result.getObjectName(),
                     "account", "アカウントが重複しています");
             result.addError(fieldError);
@@ -233,7 +234,7 @@ public class UserController {
             );
             String branchId = userForm.getBranchId().toString();
             String departmentId = userForm.getDepartmentId().toString();
-            if (!allowedCombinations.containsKey(branchId) && allowedCombinations.get(branchId).contains(departmentId)) {
+            if (!(allowedCombinations.containsKey(branchId) && allowedCombinations.get(branchId).contains(departmentId))) {
                 FieldError fieldError = new FieldError(result.getObjectName(),
                         "branchId", "支社と部署の組み合わせが不正です");
                 result.addError(fieldError);
@@ -251,4 +252,5 @@ public class UserController {
 
         return new ModelAndView("redirect:/user/management");
     }
+
 }
