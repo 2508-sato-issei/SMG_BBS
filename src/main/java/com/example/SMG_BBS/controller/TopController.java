@@ -6,6 +6,7 @@ import com.example.SMG_BBS.controller.form.UserMessageForm;
 import com.example.SMG_BBS.security.LoginUserDetails;
 import com.example.SMG_BBS.service.CommentService;
 import com.example.SMG_BBS.service.MessageService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,7 @@ public class TopController {
      */
     @GetMapping
     public ModelAndView top(@AuthenticationPrincipal LoginUserDetails loginUser,
+                            HttpSession session,
                             @RequestParam(required = false) String startDate,
                             @RequestParam(required = false) String endDate,
                             @RequestParam(required = false) String category,
