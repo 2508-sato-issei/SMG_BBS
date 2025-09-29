@@ -22,18 +22,28 @@ public class UserService {
     PasswordEncoder passwordEncoder;
 
     /*
-     * レコード追加、ユーザー復活・停止フラグの更新
+     * レコード追加・更新
      */
     public void saveUser(UserForm reqUser) {
 
-        // 新規投稿の場合 または パスワード更新有の場合
-        if (reqUser.getId() == null || (!reqUser.getPassword().isBlank() && reqUser.getIsStopped() == 0)) {
+        boolean isNewUser = reqUser.getId() == null;
+        boolean changeIsStopped = false;
+
+        User dbUser = null;
+        if (!isNewUser) {
+            dbUser = userRepository.findById(reqUser.getId()).orElse(null);
+        }
+        // ユーザー停止状態変更有無判定
+        if (dbUser != null && dbUser.getIsStopped() != reqUser.getIsStopped()) {
+            changeIsStopped = true;
+        }
+
+        // 新規ユーザー または ユーザー更新で新規パスワード入力ありの場合、パスワードを暗号化
+        if (isNewUser || !reqUser.getPassword().isBlank() && !changeIsStopped) {
             String rawPassword = reqUser.getPassword();
             String encodedPassword = passwordEncoder.encode(rawPassword);
             reqUser.setPassword(encodedPassword);
-        }
-
-        if (reqUser.getId() != null && reqUser.getPassword().isBlank()) {
+        } else {
             User user = userRepository.findById(reqUser.getId()).orElse(null);
             reqUser.setPassword(user.getPassword());
         }

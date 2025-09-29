@@ -20,13 +20,15 @@ public class LoginUserDetails implements UserDetails {
     private final String account;
     private final String password;
     private final Integer departmentId;
-    private final Collection <? extends GrantedAuthority> authorities;
+    private final Collection<? extends GrantedAuthority> authorities;
+    private final User user;
 
     public LoginUserDetails(User user) {
         this.id = user.getId();
         this.account = user.getAccount();
         this.password = user.getPassword();
         this.departmentId = user.getDepartmentId();
+        this.user = user;
 
         if (user.getDepartmentId() == 1) {
             // 部署IDが1(総務人事部)なら、管理者権限を付与
@@ -40,7 +42,7 @@ public class LoginUserDetails implements UserDetails {
 
     // ロールのコレクションを返す
     @Override
-    public Collection <? extends GrantedAuthority> getAuthorities() {
+    public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
     }
 
@@ -57,26 +59,12 @@ public class LoginUserDetails implements UserDetails {
     }
 
     @Override
-    public boolean isAccountNonExpired() {
-        //  ユーザーが期限切れでなければtrueを返す
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        //  ユーザーがロックされていなければtrueを返す
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        //  パスワードが期限切れでなければtrueを返す
-        return true;
-    }
-
-    @Override
     public boolean isEnabled() {
-        //  ユーザーが有効ならtrueを返す
-        return true;
+        if (user.getIsStopped() == 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
+
 }
