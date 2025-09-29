@@ -205,7 +205,12 @@ public class UserController {
         // アカウント重複チェック(同一アカウントが存在し、かつユーザーIDが一致しない場合 ＝ 重複)
         if(duplicationUser != null && !duplicationUser.getId().equals(id)) {
             FieldError fieldError = new FieldError(result.getObjectName(),
-                    "account", "アカウントが重複しています");
+                    "account",
+                    userForm.getAccount(),
+                    false,
+                    null,
+                    null,
+                    "アカウントが重複しています");
             result.addError(fieldError);
         }
 
