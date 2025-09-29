@@ -33,10 +33,6 @@ public class SecurityConfig {
                                            CustomAccessDeniedHandler accessDeniedHandler,
                                            AuthenticationManager authManager) throws Exception {
 
-        CustomUsernamePasswordAuthenticationFilter customFilter = new CustomUsernamePasswordAuthenticationFilter();
-        customFilter.setAuthenticationManager(authManager);
-        customFilter.setAuthenticationFailureHandler(new CustomAuthenticationFailureHandler());
-
         http
                 .formLogin(login -> login.loginPage("/login")
                         .failureHandler(customAuthenticationFailureHandler)
@@ -48,7 +44,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/**").authenticated()
                         .anyRequest().authenticated()
                 )
-                .addFilterAt(customFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint(authenticationEntryPoint)
                         .accessDeniedHandler(accessDeniedHandler)

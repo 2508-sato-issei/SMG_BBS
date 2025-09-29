@@ -17,7 +17,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
                          AuthenticationException authException) throws IOException {
 
         request.getSession().setAttribute("errorMessage", "ログインしてください");
-        response.sendRedirect("/login");
+        response.sendRedirect(request.getContextPath() + "/login");
     }
 
 }
