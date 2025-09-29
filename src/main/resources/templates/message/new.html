@@ -10,7 +10,7 @@
     <h2>投稿登録</h2>
 </div>
 <div class="main-contents">
-    <form method="post" action="/message/add" th:object="${formModel}">
+    <form method="post" th:action="@{/message/add}" th:object="${formModel}">
         <!-- CSRFトークン -->
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         <div class="errorMessages">
@@ -19,19 +19,19 @@
             <div th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></div>
         </div>
         <div class="new-form-area">
-            <label>タイトル</label><br/>
-            <textarea th:field="*{title}" size="20" maxlength="200"></textarea><br/>
-            <label>投稿内容</label><br/>
-            <textarea class="text-box" th:field="*{text}" size="20" maxlength="200"></textarea><br/>
-            <label>カテゴリ</label><br/>
-            <textarea th:field="*{category}" size="20" maxlength="200"></textarea><br/>
-            <input type="submit" value="登録"/>
+            <label>タイトル</label>
+            <textarea th:field="*{title}" size="20" maxlength="200"></textarea>
+            <label>投稿内容</label>
+            <textarea class="text-box" th:field="*{text}"></textarea>
+            <label>カテゴリ</label>
+            <textarea th:field="*{category}" size="20" maxlength="200"></textarea><br />
+            <input class="registration-button" type="submit" value="登録"/>
         </div>
     </form>
 </div>
 <div class="footer-contents">
     <div class="return-button">
-        <form action="/">
+        <form th:action="@{/}">
             <input type="submit" value="戻る"/>
         </form>
     </div>

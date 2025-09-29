@@ -64,6 +64,7 @@ public class TopController {
 
         mav.setViewName("top");
         mav.addObject("isShowButton", isShowButton);
+        mav.addObject("loginUser", loginUser);
         mav.addObject("messages", messages);
         mav.addObject("comments", comments);
         mav.addObject("startDate", startDate);
@@ -71,5 +72,4 @@ public class TopController {
         mav.addObject("category", category);
         return mav;
     }
-
 }

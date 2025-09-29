@@ -2,10 +2,12 @@ package com.example.SMG_BBS.controller;
 
 import com.example.SMG_BBS.controller.form.CommentForm;
 import com.example.SMG_BBS.controller.form.UserForm;
+import com.example.SMG_BBS.security.LoginUserDetails;
 import com.example.SMG_BBS.service.CommentService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -24,7 +26,8 @@ public class CommentController {
 
     //コメント登録機能
     @PostMapping("/comment/add/{messageId}")
-    public ModelAndView addComment(@ModelAttribute("formModel") @Validated CommentForm commentForm,
+    public ModelAndView addComment(@AuthenticationPrincipal LoginUserDetails loginUser,
+                                   @ModelAttribute("formModel") @Validated CommentForm commentForm,
                                    BindingResult result,
                                    @PathVariable Integer messageId,
                                    RedirectAttributes redirectAttributes,
@@ -37,11 +40,8 @@ public class CommentController {
             return new ModelAndView("redirect:/");
         }
 
-        //userIdをセッションから取得し、commentFormにセット
-//        UserForm user = (UserForm) session.getAttribute("loginUser");
-//        commentForm.setUserId(user.getId());
-        //ログイン機能できるまでの仮userId
-        commentForm.setUserId(1);
+        //セキュリティからuserIdを取得し、commentFormにセット
+        commentForm.setUserId(loginUser.getId());
 
         //messageIdをcommentFormにセット
         commentForm.setMessageId(messageId);

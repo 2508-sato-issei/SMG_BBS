@@ -25,40 +25,72 @@
             <div th:if="${#fields.hasErrors('branchId')}" th:errors="*{branchId}"></div>
             <div th:if="${#fields.hasErrors('departmentId')}" th:errors="*{departmentId}"></div>
         </div>
-        <label>アカウント名</label>
-        <input th:field="*{account}" th:value="*{account}"/>
-        <label>パスワード</label>
-        <input type="password" name="password">
-        <label>確認用パスワード</label>
-        <input type="password" name="confirmationPassword">
-        <label>氏名</label>
-        <input th:field="*{name}"/>
-        <label>本社/支社名</label>
-        <select name="branchId">
-            <option value="1" th:selected="*{branchId == 1}">本社</option>
-            <option value="2" th:selected="*{branchId == 2}">A支社</option>
-            <option value="3" th:selected="*{branchId == 3}">B支社</option>
-            <option value="4" th:selected="*{branchId == 4}">C支社</option>
-        </select>
-        <label>所属部名</label>
-        <select name="departmentId">
-            <option value="1" th:selected="*{departmentId == 1}">総務人事部</option>
-            <option value="2" th:selected="*{departmentId == 2}">情報管理部</option>
-            <option value="3" th:selected="*{departmentId == 3}">営業部</option>
-            <option value="4" th:selected="*{departmentId == 4}">技術部</option>
-        </select>
-        <label>稼働状況</label>
-        <select name="isStopped">
-            <option value="0" th:selected="*{isStopped == 0}">有効</option>
-            <option value="1" th:selected="*{isStopped == 1}">停止中</option>
-        </select>
-        <input type="submit" value="更新">
+        <div class="new-form-area">
+            <label>アカウント名</label>
+            <input th:field="*{account}" th:value="*{account}"/>
+            <label>パスワード</label>
+            <input type="password" name="password">
+            <label>確認用パスワード</label>
+            <input type="password" name="confirmationPassword">
+            <label>氏名</label>
+            <input th:field="*{name}"/>
+            <label>本社/支社名</label>
+            <span th:if="${loginUser.id == formModel.id}">
+                <th:block th:switch="*{branchId}" name="branchId">
+                    <span th:case=1 th:text="本社"></span>
+                    <span th:case=2 th:text="A支社"></span>
+                    <span th:case=3 th:text="B支社"></span>
+                    <span th:case=4 th:text="C支社"></span>
+                </th:block>
+            </span>
+            <span th:if="${loginUser.id != formModel.id}">
+                <select name="branchId">
+                    <option value="1" th:selected="*{branchId == 1}">本社</option>
+                    <option value="2" th:selected="*{branchId == 2}">A支社</option>
+                    <option value="3" th:selected="*{branchId == 3}">B支社</option>
+                    <option value="4" th:selected="*{branchId == 4}">C支社</option>
+                </select>
+            </span>
+            <label>所属部名</label>
+            <span th:if="${loginUser.id == formModel.id}">
+                <th:block th:switch="*{departmentId}" name="departmentId">
+                    <span th:case=1 th:text="総務人事部"></span>
+                    <span th:case=2 th:text="情報管理部"></span>
+                    <span th:case=3 th:text="営業部"></span>
+                    <span th:case=4 th:text="技術部"></span>
+                </th:block>
+            </span>
+            <span th:if="${loginUser.id != formModel.id}">
+                <select name="departmentId">
+                    <option value="1" th:selected="*{departmentId == 1}">総務人事部</option>
+                    <option value="2" th:selected="*{departmentId == 2}">情報管理部</option>
+                    <option value="3" th:selected="*{departmentId == 3}">営業部</option>
+                    <option value="4" th:selected="*{departmentId == 4}">技術部</option>
+                </select>
+            </span>
+            <label>稼働状況</label>
+            <span th:if="${loginUser.id == formModel.id}">
+                <th:block th:switch="*{isStopped}" name="isStopped">
+                    <span th:case=0 th:text="有効"></span>
+                    <span th:case=1 th:text="停止中"></span>
+                </th:block>
+            </span>
+            <span th:if="${loginUser.id != formModel.id}">
+                <select name="isStopped">
+                    <option value="0" th:selected="*{isStopped == 0}">有効</option>
+                    <option value="1" th:selected="*{isStopped == 1}">停止中</option>
+                </select>
+            </span>
+            <input class="registration-button" type="submit" value="更新">
+        </div>
     </form>
 </div>
 <div class="footer-contents">
-    <form th:action="@{/user/management}">
-        <input type="submit" value="戻る">
-    </form>
+    <div class="return-button">
+        <form th:action="@{/user/management}">
+            <input type="submit" value="戻る">
+        </form>
+    </div>
 </div>
 </body>
 </html>

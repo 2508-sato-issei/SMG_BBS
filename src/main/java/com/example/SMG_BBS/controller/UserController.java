@@ -1,11 +1,10 @@
 package com.example.SMG_BBS.controller;
 
+import com.example.SMG_BBS.security.LoginUserDetails;
 import com.example.SMG_BBS.controller.form.UserForm;
 import com.example.SMG_BBS.repository.entity.User;
-import com.example.SMG_BBS.security.LoginUserDetails;
 import com.example.SMG_BBS.service.UserService;
 import com.example.SMG_BBS.validation.CreateGroup;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.groups.Default;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -105,20 +104,7 @@ public class UserController {
      * ユーザー管理画面表示
      */
     @GetMapping("/user/management")
-    public ModelAndView userManage(HttpSession session, RedirectAttributes redirectAttributes) {
-
-        // セッションからログインユーザ情報を取得
-        UserForm user = (UserForm) session.getAttribute("loginUser");
-
-        /*
-        // ログインユーザーの部署チェック（総務人事部(=1)以外ならエラー）
-        if (user == null || user.getDepartmentId() != 1) {
-            List<String> errorMessages = new ArrayList<>();
-            errorMessages.add("無効なアクセスです");
-            redirectAttributes.addFlashAttribute("errorMessages", errorMessages);
-            return new ModelAndView("redirect:/");
-        }
-         */
+    public ModelAndView userManage(@AuthenticationPrincipal LoginUserDetails loginUser) {
 
         ModelAndView mav = new ModelAndView();
         // ユーザー情報の全件取得
@@ -127,6 +113,7 @@ public class UserController {
         // ユーザー管理画面表示
         mav.setViewName("user/management");
         mav.addObject("users", users);
+        mav.addObject("loginUser", loginUser);
         return mav;
 
     }
@@ -137,37 +124,50 @@ public class UserController {
     @GetMapping("/user/edit/{id}")
     public ModelAndView userEdit(@AuthenticationPrincipal LoginUserDetails loginUser,
                                  @PathVariable String id,
-                                 HttpSession session,
                                  RedirectAttributes redirectAttributes) {
         List<String> errorMessages = new ArrayList<>();
-
-        // セッションからログインユーザ情報を取得
-//        UserForm loginUser = (UserForm) session.getAttribute("loginUser");
 
         // ログインユーザーの部署チェック（総務人事部(=1)以外ならエラー）
         // 権限のないユーザーまたは未ログインユーザーがURLに直打ちしてアクセスしたときに排除する
         if (loginUser.getDepartmentId() != 1) {
             errorMessages.add("無効なアクセスです");
             redirectAttributes.addFlashAttribute("errorMessages", errorMessages);
-            return new ModelAndView("redirect:/");
+            return new ModelAndView("redirect:/user/management");
         }
 
         // 取得したユーザーIDをチェック
         if (id == null || id.trim().isEmpty() || !id.matches("^[0-9]+$")) {
             errorMessages.add("不正なパラメータが入力されました");
             redirectAttributes.addFlashAttribute("errorMessages", errorMessages);
-            return new ModelAndView("redirect:/");
+            return new ModelAndView("redirect:/user/management");
         }
 
         // 編集対象のレコードを取得
         UserForm user = userService.selectUserById(Integer.valueOf(id));
 
+        // URLに存在しないIDを入力した場合のチェック
+        if(user == null){
+            errorMessages.add("不正なパラメータが入力されました");
+            redirectAttributes.addFlashAttribute("errorMessages", errorMessages);
+            return new ModelAndView("redirect:/user/management");
+        }
+
         // 編集画面表示
         ModelAndView mav = new ModelAndView();
         mav.setViewName("user/edit");
         mav.addObject("formModel", user);
+        mav.addObject("loginUser", loginUser);
         return mav;
 
+    }
+
+    /*
+     * URLのIDを削除した場合のチェック
+     */
+    @GetMapping("/user/edit/")
+    public ModelAndView deleteUserId(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("errorMessages","不正なパラメータが入力されました");
+        return new ModelAndView("redirect:/user/management");
     }
 
     /*
@@ -188,20 +188,17 @@ public class UserController {
      * ユーザー編集処理
      */
     @PutMapping("/user/update/{id}")
-    public ModelAndView updateUser(@PathVariable Integer id,
-                                   String account,
+    public ModelAndView updateUser(@AuthenticationPrincipal LoginUserDetails loginUser,
+                                   @PathVariable Integer id,
                                    String confirmationPassword,
                                    @ModelAttribute("formModel") @Validated({Default.class}) UserForm userForm,
                                    BindingResult result) {
 
-        // IDから既存のレコードを取得
-//        UserForm user = userService.selectUserById(id);
-
         // アカウントから既存レコードを取得
-        User duplicationUser = userService.selectUserByAccount(account);
+        User duplicationUser = userService.selectUserByAccount(userForm.getAccount());
 
         // アカウント重複チェック(同一アカウントが存在し、かつユーザーIDが一致しない場合 ＝ 重複)
-        if (duplicationUser != null && duplicationUser.getId() != id) {
+        if(!(duplicationUser == null && duplicationUser.getId().equals(id))) {
             FieldError fieldError = new FieldError(result.getObjectName(),
                     "account", "アカウントが重複しています");
             result.addError(fieldError);
@@ -214,14 +211,7 @@ public class UserController {
                 FieldError fieldError = new FieldError(result.getObjectName(),
                         "password", "パスワードと確認用パスワードが一致しません");
                 result.addError(fieldError);
-//            } else {
-//                // パスワードを暗号化
-//                String encPassword = CipherUtil.encrypt(userForm.getPassword());
-//                userForm.setPassword(encPassword);
             }
-//        } else {
-//            // パスワードが入力されていない場合は既存レコードのパスワードをFormにセット
-//            userForm.setPassword(user.getPassword());
         }
 
         // 支社と部署の組み合わせチェック
@@ -243,8 +233,9 @@ public class UserController {
 
         if (result.hasErrors()) {
             ModelAndView mav = new ModelAndView();
+            mav.addObject("loginUser", loginUser);
             mav.addObject("formModel", userForm);
-            mav.setViewName("user/edit");
+            mav.setViewName("/user/edit");
             return mav;
         }
 
