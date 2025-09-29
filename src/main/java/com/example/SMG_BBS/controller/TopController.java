@@ -40,7 +40,6 @@ public class TopController {
 
         //loginUserの部署IDが総務人事部ならばボタン表示フラグON
         boolean isShowButton = false;
-//        UserForm user = (UserForm) session.getAttribute("loginUser");
         if (loginUser.getDepartmentId() == 1) {
             isShowButton = true;
         }
@@ -59,6 +58,7 @@ public class TopController {
 
         mav.setViewName("top");
         mav.addObject("isShowButton", isShowButton);
+        mav.addObject("loginUser", loginUser);
         mav.addObject("messages", messages);
         mav.addObject("comments", comments);
         mav.addObject("startDate", startDate);
@@ -66,14 +66,4 @@ public class TopController {
         mav.addObject("category", category);
         return mav;
     }
-
-    // ログアウト機能
-    /*@GetMapping("/logout")
-    public ModelAndView logout(HttpSession session) {
-
-        session.invalidate();
-        return new ModelAndView("redirect:/login");
-    }
-     */
-
 }
