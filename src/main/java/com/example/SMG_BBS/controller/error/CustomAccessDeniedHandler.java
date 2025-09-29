@@ -17,7 +17,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
                        AccessDeniedException accessDeniedException) throws IOException {
 
         request.getSession().setAttribute("errorMessage", "無効なアクセスです");
-        response.sendRedirect("/");
+        response.sendRedirect(request.getContextPath() + "/");
     }
 
 }

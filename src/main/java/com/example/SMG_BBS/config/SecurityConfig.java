@@ -3,7 +3,6 @@ package com.example.SMG_BBS.config;
 import com.example.SMG_BBS.controller.error.CustomAccessDeniedHandler;
 import com.example.SMG_BBS.controller.error.CustomAuthenticationEntryPoint;
 import com.example.SMG_BBS.controller.error.CustomAuthenticationFailureHandler;
-import com.example.SMG_BBS.controller.error.CustomUsernamePasswordAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +13,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
@@ -30,12 +28,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
                                            CustomAuthenticationEntryPoint authenticationEntryPoint,
-                                           CustomAccessDeniedHandler accessDeniedHandler,
-                                           AuthenticationManager authManager) throws Exception {
-
-        CustomUsernamePasswordAuthenticationFilter customFilter = new CustomUsernamePasswordAuthenticationFilter();
-        customFilter.setAuthenticationManager(authManager);
-        customFilter.setAuthenticationFailureHandler(new CustomAuthenticationFailureHandler());
+                                           CustomAccessDeniedHandler accessDeniedHandler) throws Exception {
 
         http
                 .formLogin(login -> login.loginPage("/login")
@@ -48,7 +41,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/**").authenticated()
                         .anyRequest().authenticated()
                 )
-                .addFilterAt(customFilter, UsernamePasswordAuthenticationFilter.class)
+
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint(authenticationEntryPoint)
                         .accessDeniedHandler(accessDeniedHandler)
