@@ -11,7 +11,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -35,14 +34,8 @@ public class CommentController {
                                    HttpSession session){
 
         if(result.hasErrors()){
-            String text = commentForm.getText();
-            String errorMessage = "";
-            for(ObjectError error : result.getAllErrors()){
-                errorMessage += error.getDefaultMessage();
-            }
-
-            redirectAttributes.addFlashAttribute("comment", text);
-            redirectAttributes.addFlashAttribute("commentErrorMessage", errorMessage);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.formModel", result);
+            redirectAttributes.addFlashAttribute("formModel", commentForm);
             redirectAttributes.addFlashAttribute("errorId", messageId);
             return new ModelAndView("redirect:/");
         }

@@ -1,46 +1,24 @@
 package com.example.SMG_BBS.config;
 
-import com.example.SMG_BBS.controller.error.CustomAccessDeniedHandler;
-import com.example.SMG_BBS.controller.error.CustomAuthenticationEntryPoint;
-import com.example.SMG_BBS.controller.error.CustomAuthenticationFailureHandler;
-import com.example.SMG_BBS.controller.error.CustomUsernamePasswordAuthenticationFilter;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.SMG_BBS.controller.errorHandler.CustomAccessDeniedHandler;
+import com.example.SMG_BBS.controller.errorHandler.CustomAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
 
-    @Autowired
-    CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-    }
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
                                            CustomAuthenticationEntryPoint authenticationEntryPoint,
-                                           CustomAccessDeniedHandler accessDeniedHandler,
-                                           AuthenticationManager authManager) throws Exception {
-
-        CustomUsernamePasswordAuthenticationFilter customFilter = new CustomUsernamePasswordAuthenticationFilter();
-        customFilter.setAuthenticationManager(authManager);
-        customFilter.setAuthenticationFailureHandler(new CustomAuthenticationFailureHandler());
-
+                                           CustomAccessDeniedHandler accessDeniedHandler) throws Exception {
         http
-                .formLogin(login -> login.loginPage("/login")
-                        .failureHandler(customAuthenticationFailureHandler)
-                        .permitAll())
+                .formLogin(login -> login.loginPage("/login").permitAll())
                 .logout(logout -> logout.logoutSuccessUrl("/login").clearAuthentication(true))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**").permitAll()
@@ -48,7 +26,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/**").authenticated()
                         .anyRequest().authenticated()
                 )
-                .addFilterAt(customFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint(authenticationEntryPoint)
                         .accessDeniedHandler(accessDeniedHandler)
