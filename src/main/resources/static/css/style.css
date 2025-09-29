@@ -5,7 +5,7 @@ body {
 header {
     position: fixed;
     background-color: #dcdcdc;
-    width: 98%;
+    width: 100%;
     top: 0;
     z-index: 10000;
 }
@@ -38,20 +38,24 @@ hr {
 
 .header-contents {
     text-align:right;
-	margin-left: 100px;
+	margin-left: 10%;
 	margin-right: 70px;
 }
 
+.login-header {
+    text-align: center;
+}
+
+.login-h2 {
+    text-align: center;
+}
+
+.management-h2 {
+    text-align: center;
+}
+
 .logout {
-    color: white;
-}
-
-.logout:visited {
-    color:#000080;
-}
-
-.logout:hover {
-    color:#800000;
+    margin-bottom: 5px;
 }
 
 .menu {
@@ -101,6 +105,20 @@ hr {
 	width: 80%;
 }
 
+.new-button {
+    text-align: left;
+    margin-left: 30%;
+}
+
+.user-info {
+    text-align:center;
+}
+
+.user-table {
+    margin: auto;
+    background-color: white;
+}
+
 .message-icon {
     background-color: white;
     margin: 10px auto 20px;
@@ -110,7 +128,19 @@ hr {
 .content {
     font-size: 20px;
     display: block;
-    word-wrap: break-word;
+    word-break: break-all;
+    white-space: pre-wrap;  /* 改行や空白を保ちつつ折り返す */
+}
+
+.comment-icon {
+    max-width: 100%;
+}
+
+.comment-text {
+    font-size: 20px;
+    display: inline-block;
+    vertical-align: top;
+    word-break: break-all;
     white-space: pre-wrap;  /* 改行や空白を保ちつつ折り返す */
 }
 
@@ -132,6 +162,10 @@ hr {
     background-color: white;
 }
 
+.login-form {
+    text-align: center;
+}
+
 .text-box {
     width: 600px;
     height: 100px
@@ -141,13 +175,27 @@ hr {
     text-align: right;
 }
 
+.delete-button input {
+    border: none;
+    color: white;
+    background-color: red;
+}
+
 .footer-contents {
-	margin-left: 60px;
+	margin-left: 10%;
 
 }
 
+.registration-button {
+    margin-top: 20px;
+}
+
 .return-button {
-    margin-left: 100px;
+    margin-left: 0px;
+}
+
+.management-return {
+    margin-left: 20%;
 }
 
 .arrow {
