@@ -59,7 +59,12 @@ public class UserController {
         User DuplicationUser = userService.selectUserByAccount(userForm.getAccount());
         if (DuplicationUser != null) {
             FieldError fieldError = new FieldError(result.getObjectName(),
-                    "account", "アカウントが重複しています");
+                    "account",
+                    userForm.getAccount(),
+                    false,
+                    null,
+                    null,
+                    "アカウントが重複しています");
             result.addError(fieldError);
         }
 
