@@ -1,5 +1,6 @@
 package com.example.SMG_BBS.controller;
 
+import com.example.SMG_BBS.security.LoginUserDetails;
 import com.example.SMG_BBS.controller.form.CommentForm;
 import com.example.SMG_BBS.controller.form.UserCommentForm;
 import com.example.SMG_BBS.controller.form.UserMessageForm;
