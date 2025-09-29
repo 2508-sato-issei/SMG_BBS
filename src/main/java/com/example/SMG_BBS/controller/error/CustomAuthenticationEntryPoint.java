@@ -1,4 +1,4 @@
-package com.example.SMG_BBS.controller.errorHandler;
+package com.example.SMG_BBS.controller.error;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

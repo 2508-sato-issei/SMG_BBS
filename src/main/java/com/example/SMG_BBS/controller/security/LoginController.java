@@ -15,7 +15,11 @@ public class LoginController {
 
         if (errorMessage != null) {
             model.addAttribute("errorMessage", errorMessage);
+            String account = (String) session.getAttribute("account");
+            model.addAttribute("account", account);
+
             session.removeAttribute("errorMessage");
+            session.removeAttribute("account");
         }
         return "login";
     }

@@ -22,18 +22,28 @@ public class UserService {
     PasswordEncoder passwordEncoder;
 
     /*
-     * レコード追加、ユーザー復活・停止フラグの更新
+     * レコード追加・更新
      */
     public void saveUser(UserForm reqUser) {
 
-        // 新規投稿の場合 または パスワード更新有の場合
-        if (reqUser.getId() == null || (!reqUser.getPassword().isBlank() && reqUser.getIsStopped() == 0)) {
+        boolean isNewUser = reqUser.getId() == null;
+        boolean changeIsStopped = false;
+
+        User dbUser = null;
+        if (!isNewUser) {
+            dbUser = userRepository.findById(reqUser.getId()).orElse(null);
+        }
+        // ユーザー停止状態変更有無判定
+        if (dbUser != null && dbUser.getIsStopped() != reqUser.getIsStopped()) {
+            changeIsStopped = true;
+        }
+
+        // 新規ユーザー または ユーザー更新で新規パスワード入力ありの場合、パスワードを暗号化
+        if (isNewUser || !reqUser.getPassword().isBlank() && !changeIsStopped) {
             String rawPassword = reqUser.getPassword();
             String encodedPassword = passwordEncoder.encode(rawPassword);
             reqUser.setPassword(encodedPassword);
-        }
-
-        if (reqUser.getId() != null && reqUser.getPassword().isBlank()) {
+        } else {
             User user = userRepository.findById(reqUser.getId()).orElse(null);
             reqUser.setPassword(user.getPassword());
         }
@@ -72,7 +82,7 @@ public class UserService {
      * ユーザー情報一覧を取得
      */
     public List<UserForm> findAll() {
-        List<User> results = userRepository.findAll();
+        List<User> results = userRepository.findAllByOrderByIdAsc();
         return setUserForm(results);
     }
 
@@ -99,9 +109,17 @@ public class UserService {
      * ユーザー編集画面でのユーザー情報を取得
      */
     public UserForm selectUserById(Integer id) {
-        List<User> results = new ArrayList<>();
-        results.add(userRepository.findById(id).orElse(null));
-        List<UserForm> users = setUserForm(results);
-        return users.get(0);
+
+        User userResult = userRepository.findById(id).orElse(null);
+
+        // レコードの存在チェック（存在しないIDをURLに直接入力した場合のバリデーション）
+        if(userResult == null){
+            return null;
+        } else {
+            List<User> results = new ArrayList<>();
+            results.add(userResult);
+            List<UserForm> users = setUserForm(results);
+            return users.get(0);
+        }
     }
 }
