@@ -12,18 +12,18 @@
 <div class="main-contents">
     <div th:if="${errorMessage}">
         <div class="errorMessages">
-            <span th:utext="${errorMessage}"></span><br/>
+            <span th:text="${errorMessage}"></span>
         </div>
     </div>
     <div class="login-form">
         <form th:action="@{/login}" method="post">
             <label>アカウント名</label>
             <div>
-                <input type="text" name="username"/>
+                <input type="text" name="username" required/>
             </div>
             <label>パスワード</label>
             <div>
-                <input type="password" name="password"/>
+                <input type="password" name="password" required/>
             </div>
             <br/>
             <input type="submit" value="ログイン"/>
