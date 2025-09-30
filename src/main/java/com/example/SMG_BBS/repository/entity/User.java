@@ -39,7 +39,7 @@ public class User {
     @Column(insertable = false, updatable = false)
     private Timestamp createdDate;
 
-    @Column(insertable = false, updatable = false)
+    @Column(insertable = false, updatable = true)
     private Timestamp updatedDate;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
