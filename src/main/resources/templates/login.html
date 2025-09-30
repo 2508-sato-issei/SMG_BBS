@@ -11,7 +11,7 @@
 </div>
 <div class="main-contents">
     <div th:if="${errorMessages}">
-        <div class="errorMessages">
+        <div class="login-errorMessages">
             <div th:each="errorMessage : ${errorMessages}">
                 <span th:text="${errorMessage}"></span>
             </div>
