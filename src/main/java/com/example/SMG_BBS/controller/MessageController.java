@@ -24,7 +24,7 @@ public class MessageController {
      * 新規投稿画面表示
      */
     @GetMapping("/message/new")
-    public ModelAndView newMessage(Model model) {
+    public ModelAndView newMessage(@AuthenticationPrincipal LoginUserDetails loginUser, Model model) {
 
         ModelAndView mav = new ModelAndView();
 
@@ -33,6 +33,7 @@ public class MessageController {
             mav.addObject("formModel", messageForm);
         }
 
+        mav.addObject("loginUser", loginUser);
         mav.setViewName("message/new");
         return mav;
     }
