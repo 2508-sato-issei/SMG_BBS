@@ -28,19 +28,22 @@
         <input type="submit" value="ログアウト">
     </form>
 </div>
+<!--メニュー-->
+<div class="menu">
+    <nav>
+        <ul>
+            <li><a th:href="@{/}">トップへ戻る</a></li>
+            <li><a th:href="@{/user/new}">新規ユーザー登録</a></li>
+        </ul>
+    </nav>
+</div>
 <div class="user-info">
     <div class="errorMessages" th:if="${errorMessages != null}">
         <div th:each="errorMessage : ${errorMessages}" th:text="${errorMessages}"></div>
     </div>
 
-    <div class="new-button">
-        <a th:href="@{/user/new}">
-            <input type="submit" value="新規ユーザー登録"/>
-        </a>
-    </div>
-
     <table class="user-table" border="1">
-        <caption>ユーザー登録情報一覧</caption>
+        <caption class="title">ユーザー登録情報一覧</caption>
         <tr>
             <th>編集</th>
             <th>ID<br/><hr>アカウント名</th>
@@ -50,20 +53,20 @@
             <th>アカウントの状態</th>
         </tr>
         <tr class="user" th:each="user : ${users}">
-            <td>
+            <td class="td-edit">
                 <a th:href="@{/user/edit/{id}(id=${user.id})}">
                         <input type="button" value="編集"/>
                 </a>
             </td>
-            <td><!-- ユーザーID・アカウント名表示 -->
+            <td class="td-idAccount"><!-- ユーザーID・アカウント名表示 -->
                 <span th:text="${user.id}"></span><br/>
                 <hr>
                 <span name="account" th:text="${user.account}"></span>
             </td>
-            <td><!-- 氏名表示 -->
+            <td class="td-name"><!-- 氏名表示 -->
                 <span name="name" th:text="${user.name}"></span>
             </td>
-            <td><!-- 所属表示 -->
+            <td class="td-department"><!-- 所属表示 -->
                 <th:block th:switch="${user.branchId}">
                     <span th:case=1 th:text="本社"></span>
                     <span th:case=2 th:text="A支社"></span>
@@ -79,22 +82,22 @@
                     <span th:case=4 th:text="技術部"></span>
                 </th:block>
             </td>
-            <td>
+            <td class="td-date">
                 <span th:text="${#temporals.format(user.createdDate, 'yyyy/MM/dd HH:mm:ss')}"></span><br/>
                 <hr>
                 <span th:text="${#temporals.format(user.updatedDate, 'yyyy/MM/dd HH:mm:ss')}"></span>
             </td>
-            <td>
+            <td class="td-status">
                 <th:block th:switch="${user.isStopped}">
-                    <span th:case=0 th:text="有効"></span>
-                    <span th:case=1 th:text="停止中"></span>
+                    <span class="valid-status" th:case=0 th:text="有効"></span>
+                    <span class="stop-status" th:case=1 th:text="停止中"></span>
                 </th:block>
                 <span th:if="${loginUser.id != user.id}">
-                    <form th:action="@{/change/{id}(id=${user.id})}" th:method="put" onSubmit="return CheckAlter()">
+                    <form class="valid-button" th:action="@{/change/{id}(id=${user.id})}" th:method="put" onSubmit="return CheckAlter()">
                         <input type="hidden" name="isStopped" value="0"/>
                         <input type="submit" value="有効"/>
                     </form>
-                    <form th:action="@{/change/{id}(id=${user.id})}" th:method="put" onSubmit="return CheckAlter()">
+                    <form class="stop-button" th:action="@{/change/{id}(id=${user.id})}" th:method="put" onSubmit="return CheckAlter()">
                         <input type="hidden" name="isStopped" value="1"/>
                         <input type="submit" value="停止"/>
                     </form>
@@ -102,13 +105,6 @@
             </td>
         </tr>
     </table>
-</div>
-<div class="footer-contents">
-    <div class="management-return">
-        <form th:action="@{/}">
-            <input type="submit" value="戻る"/>
-        </form>
-    </div>
 </div>
 </body>
 </html>

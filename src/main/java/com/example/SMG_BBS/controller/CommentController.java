@@ -31,8 +31,7 @@ public class CommentController {
                                    @ModelAttribute("formModel") @Validated CommentForm commentForm,
                                    BindingResult result,
                                    @PathVariable Integer messageId,
-                                   RedirectAttributes redirectAttributes,
-                                   HttpSession session){
+                                   RedirectAttributes redirectAttributes){
 
         if(result.hasErrors()){
             String errorMessage = "";
@@ -41,6 +40,7 @@ public class CommentController {
             }
             redirectAttributes.addFlashAttribute("commentErrorMessage", errorMessage);
             redirectAttributes.addFlashAttribute("errorId", messageId);
+            redirectAttributes.addFlashAttribute("formModel", commentForm);
             return new ModelAndView("redirect:/");
         }
 
