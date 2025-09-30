@@ -50,7 +50,8 @@ public class UserController {
      * ユーザ登録処理
      */
     @PostMapping("/user/add")
-    public ModelAndView addUser(String confirmationPassword,
+    public ModelAndView addUser(@AuthenticationPrincipal LoginUserDetails loginUser,
+                                String confirmationPassword,
                                 @ModelAttribute("formModel")
                                 @Validated({Default.class, CreateGroup.class}) UserForm userForm,
                                 BindingResult result) {
@@ -98,6 +99,7 @@ public class UserController {
         if (result.hasErrors()) {
             ModelAndView mav = new ModelAndView();
             mav.addObject("formModel", userForm);
+            mav.addObject("loginUser", loginUser);
             mav.setViewName("user/new");
             return mav;
         }

@@ -66,7 +66,6 @@ public class MessageController {
     public ModelAndView deleteMessage(@PathVariable Integer id,
                                       @RequestParam Integer userId,
                                       @AuthenticationPrincipal LoginUserDetails loginUser,
-                                      @ModelAttribute("formModel") MessageForm messageForm,
                                       RedirectAttributes redirectAttributes) {
 
         Integer loginUserId = loginUser.getId();
