@@ -36,7 +36,7 @@
             <input th:field="*{name}"/>
             <label>本社/支社名</label>
             <span th:if="${loginUser.id == formModel.id}">
-                <th:block th:switch="*{branchId}" name="branchId">
+                <th:block th:switch="*{branchId}">
                     <input type="hidden" name="branchId" th:value="*{branchId}">
                     <span class="disable-change" th:case=1 th:text="本社"></span>
                     <span class="disable-change" th:case=2 th:text="A支社"></span>
@@ -54,7 +54,8 @@
             </span>
             <label>所属部名</label>
             <span th:if="${loginUser.id == formModel.id}">
-                <th:block th:switch="*{departmentId}" name="departmentId">
+                <th:block th:switch="*{departmentId}">
+                    <input type="hidden" name="departmentId" th:value="*{departmentId}">
                     <span class="disable-change" th:case=1 th:text="総務人事部"></span>
                     <span class="disable-change" th:case=2 th:text="情報管理部"></span>
                     <span class="disable-change" th:case=3 th:text="営業部"></span>
@@ -71,7 +72,8 @@
             </span>
             <label>稼働状況</label>
             <span th:if="${loginUser.id == formModel.id}">
-                <th:block th:switch="*{isStopped}" name="isStopped">
+                <th:block th:switch="*{isStopped}">
+                    <input type="hidden" name="isStopped" th:value="*{isStopped}">
                     <span class="disable-change" th:case=0 th:text="有効"></span>
                     <span class="disable-change" th:case=1 th:text="停止中"></span>
                 </th:block>
