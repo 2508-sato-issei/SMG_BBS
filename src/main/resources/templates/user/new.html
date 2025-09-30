@@ -7,7 +7,22 @@
 </head>
 <body>
 <div class="header-contents">
-    <h2>ユーザ登録</h2>
+    <h2>新規ユーザー登録</h2>
+    <th:block class="loginUser" th:switch="${loginUser.branchId}">
+        <span th:case=1 th:text="本社"></span>
+        <span th:case=2 th:text="A支社"></span>
+        <span th:case=3 th:text="B支社"></span>
+        <span th:case=4 th:text="C支社"></span>
+    </th:block>
+    /
+    <th:block class="loginUser" th:switch="${loginUser.departmentId}">
+        <span th:case=1 th:text="総務人事部"></span>
+        <span th:case=2 th:text="情報管理部"></span>
+        <span th:case=3 th:text="営業部"></span>
+        <span th:case=4 th:text="技術部"></span>
+    </th:block>
+    /
+    <span class="loginUser" th:text="${loginUser.account}"></span>
 </div>
 <div class="main-contents">
     <form method="post" th:action="@{/user/add}" th:object="${formModel}">
@@ -22,14 +37,14 @@
         </div>
         <div class="new-form-area">
             <label>アカウント名(半角英数字6文字以上20文字以下)</label>
-            <input type="text" th:field="*{account}"/><br/>
+            <input type="text" th:field="*{account}">
             <label>パスワード(記号を含む半角6文字以上20文字以下)</label>
-            <input type="password" th:field="*{password}"/><br/>
-            <label>パスワード（確認用）</label>
-            <input type="password" name="confirmationPassword" th:value="${confirmationPassword}"><br/>
+            <input type="password" th:field="*{password}"/>
+            <label>確認用パスワード</label>
+            <input type="password" name="confirmationPassword" th:value="${confirmationPassword}">
             <label>氏名(10文字以下)</label>
-            <input type="text" th:field="*{name}"/><br/>
-            <label>支社</label>
+            <input type="text" th:field="*{name}">
+            <label>本社/支社名</label>
             <select th:field="*{branchId}">
                 <option value="" selected></option>
                 <option value="1">本社</option>
@@ -37,15 +52,14 @@
                 <option value="3">B支社</option>
                 <option value="4">C支社</option>
             </select><br/>
-            <label>部署</label>
+            <label>所属部名</label>
             <select th:field="*{departmentId}">
                 <option value="" selected></option>
                 <option value="1">総務人事部</option>
                 <option value="2">情報管理部</option>
                 <option value="3">営業部</option>
                 <option value="4">技術部</option>
-            </select>
-            <br/>
+            </select><br/>
             <input class="registration-button" type="submit" value="登録"/>
         </div>
     </form>

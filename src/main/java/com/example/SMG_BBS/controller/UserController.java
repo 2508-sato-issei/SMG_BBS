@@ -32,7 +32,7 @@ public class UserController {
      * 新規ユーザ登録画面表示
      */
     @GetMapping("/user/new")
-    public ModelAndView newUser(Model model) {
+    public ModelAndView newUser(@AuthenticationPrincipal LoginUserDetails loginUser, Model model) {
 
         ModelAndView mav = new ModelAndView();
 
@@ -41,6 +41,7 @@ public class UserController {
             mav.addObject("formModel", userForm);
         }
 
+        mav.addObject("loginUser", loginUser);
         mav.setViewName("user/new");
         return mav;
     }
