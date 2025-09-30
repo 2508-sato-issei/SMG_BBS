@@ -1,0 +1,387 @@
+body {
+	background-color: #dcdcdc;
+}
+
+header {
+    position: fixed;
+    background-color: #dcdcdc;
+    width: 100%;
+    top: 0;
+    z-index: 10000;
+}
+
+main {
+    padding-top: 140px;
+}
+
+h1 {
+    text-align: center;
+}
+
+h2 {
+    text-align: left;
+}
+
+label {
+	display: block;
+}
+
+button {
+	margin-bottom: 5px;
+}
+
+hr {
+    border: none;
+    border-top: 1px dotted #999;
+    margin: 2.5px;
+}
+
+.management-main {
+     padding-top: 160px;
+}
+
+
+.header-contents {
+    text-align:right;
+	margin-left: 10%;
+	margin-right: 70px;
+}
+
+.login-header {
+    text-align: center;
+}
+
+.login-h2 {
+    text-align: center;
+}
+
+.management-h2 {
+    text-align: center;
+}
+
+.loginUser {
+    margin-right: 10px;
+}
+
+.logout {
+    margin-bottom: 5px;
+    display: inline-block;
+}
+
+.menu {
+    positon: fixed;
+    top:0;
+    left:0;
+    vertical-align: inherit;
+    font-size: 20px;
+    line-height: 2.5;
+    background-color: #696969;
+    height: 50px;
+}
+
+.menu ul {
+    display: flex;
+    margin: 0;
+    padding: 0 0 0 10%;
+}
+
+.menu li {
+    list-style: none;
+}
+
+.menu a {
+    display: block;
+    text-decoration: none;
+    color: white;
+    margin-right: 35px;
+}
+
+.menu a:hover {
+    color: #000080;
+}
+
+.menu a:hover {
+    color: #800000;
+}
+
+.management-menu {
+    positon: fixed;
+    top:0;
+    left:0;
+    vertical-align: inherit;
+    font-size: 20px;
+    line-height: 2.5;
+    background-color: #696969;
+    height: 50px;
+}
+
+.management-menu ul {
+    display: flex;
+    margin: 0;
+    padding: 0 0 0 18%;
+}
+
+.management-menu li {
+    list-style: none;
+}
+
+.management-menu a {
+    display: block;
+    text-decoration: none;
+    color: white;
+    margin-right: 35px;
+}
+
+.management-menu a:hover {
+    color: #000080;
+}
+
+.management-menu a:hover {
+    color: #800000;
+}
+
+.errorMessages {
+	margin-top: 10px;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	margin-left: 10px;
+	color: red;
+}
+
+.login-errorMessages {
+	margin-top: 10px;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	margin-left: 10px;
+	color: red;
+	text-align: center;
+}
+
+.main-contents {
+	margin: 20px auto;
+	padding: 10px 10px 5px 10px;
+	background-color: #dcdcdc;
+	height: 100%;
+	width: 80%;
+}
+
+.new-button {
+    text-align: left;
+    margin-left: 30%;
+}
+
+.user-info {
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.user-table {
+    margin: auto;
+    width: 800px;
+    background-color: white;
+}
+
+.title {
+    text-align: left;
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 20px;
+    padding: 5px;
+}
+
+.message-icon {
+    background-color: white;
+    margin: 10px auto 20px;
+    padding: 10px;
+    border-radius: 20px
+}
+
+.content {
+    font-size: 20px;
+    display: block;
+    word-break: break-word;
+    white-space: pre-wrap;  /* 改行や空白を保ちつつ折り返す */
+}
+
+.comment-icon {
+    max-width: 100%;
+}
+
+.comment-text {
+    font-size: 20px;
+    display: inline-block;
+    vertical-align: top;
+    word-break: break-word;
+    white-space: pre-wrap;  /* 改行や空白を保ちつつ折り返す */
+}
+
+.message-info {
+    font-size: 14px;
+    text-align: right;
+}
+
+.form-area {
+	margin: 10px;
+	padding: 10px;
+	background-color: white;
+}
+
+.new-form-area{
+    text-align: left;
+    margin-left: 60;
+    padding: 10px;
+    background-color: white;
+}
+
+.login-form {
+    text-align: center;
+}
+
+.text-box {
+    width: 600px;
+    height: 100px
+}
+
+.delete-button {
+    text-align: right;
+}
+
+.delete-button input {
+    border: none;
+    color: white;
+    background-color: red;
+}
+
+.footer-contents {
+	margin-left: 10%;
+    position: relative;
+}
+
+.registration-button {
+    margin-top: 20px;
+}
+
+.return-button {
+    margin-left: 0px;
+}
+
+.management-return {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-left: -40px;
+    height: 3em;
+    width: 5em;
+}
+
+.hint {
+    color: gray;
+}
+
+.arrow {
+  position: relative;
+  display: inline-block;
+  width: 7.7px;
+  height: 13.3px;
+}
+
+.arrow::before,
+.arrow::after {
+  content: "";
+  position: absolute;
+  top: calc(50% - 1px);
+  right: 0;
+  width: 10px;
+  height: 2px;
+  border-radius: 9999px;
+  background-color: #000000;
+  transform-origin: calc(100% - 1px) 50%;
+}
+
+.arrow::before {
+  transform: rotate(45deg);
+}
+
+.arrow::after {
+  transform: rotate(-45deg);
+}
+
+.td-edit {
+    vertical-align: inherit;
+    text-align: -internal-center;
+    width: 50px;
+}
+
+.td-idAccount {
+    vertical-align: inherit;
+    text-align: -internal-center;
+    width: 150px;
+}
+
+.td-name {
+    vertical-align: inherit;
+    text-align: -internal-center;
+    width: 150px;
+}
+
+.td-department {
+    vertical-align: inherit;
+    text-align: -internal-center;
+    width: 150px;
+}
+
+.td-date {
+    vertical-align: inherit;
+    text-align: -internal-center;
+    width: 200px;
+}
+
+.td-status {
+    vertical-align: inherit;
+    height: 70px;
+    width: 110px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    position: relative;
+}
+
+.valid-status {
+    grid-row: 1 / 3;
+    grid-column: 1;
+    display: grid;
+    align-items: center;
+    background-color: #CDE6C7;
+}
+
+.stop-status {
+    grid-row: 1 / 3;
+    grid-column: 1;
+    display: grid;
+    align-items: center;
+    background-color: #E6C9C7;
+}
+
+.valid-button {
+    grid-row: 1;
+    grid-column: 2;
+    margin: 5px;
+}
+
+.valid-button input {
+    background-color: #CDE6C7;
+}
+
+.stop-button {
+    grid-row: 2;
+    grid-column: 2;
+    margin: 5px;
+}
+
+.stop-button input {
+    background-color: #E6C9C7;
+}
+
+span.disable-change {
+    color: red;
+}
