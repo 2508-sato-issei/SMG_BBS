@@ -11,7 +11,7 @@ header {
 }
 
 main {
-    padding-top: 130px;
+    padding-top: 140px;
 }
 
 h1 {
@@ -33,6 +33,11 @@ button {
 hr {
     border: none;
     border-top: 1px dotted #999;
+    margin: 2.5px;
+}
+
+.management-main {
+     padding-top: 160px;
 }
 
 
@@ -71,7 +76,7 @@ hr {
     font-size: 20px;
     line-height: 2.5;
     background-color: #696969;
-    height: 30px;
+    height: 50px;
 }
 
 .menu ul {
@@ -79,6 +84,7 @@ hr {
     margin: 0;
     padding: 0 0 0 10%;
 }
+
 .menu li {
     list-style: none;
 }
@@ -95,6 +101,42 @@ hr {
 }
 
 .menu a:hover {
+    color: #800000;
+}
+
+.management-menu {
+    positon: fixed;
+    top:0;
+    left:0;
+    vertical-align: inherit;
+    font-size: 20px;
+    line-height: 2.5;
+    background-color: #696969;
+    height: 50px;
+}
+
+.management-menu ul {
+    display: flex;
+    margin: 0;
+    padding: 0 0 0 18%;
+}
+
+.management-menu li {
+    list-style: none;
+}
+
+.management-menu a {
+    display: block;
+    text-decoration: none;
+    color: white;
+    margin-right: 35px;
+}
+
+.management-menu a:hover {
+    color: #000080;
+}
+
+.management-menu a:hover {
     color: #800000;
 }
 
@@ -133,7 +175,8 @@ hr {
 .title {
     text-align: left;
     font-weight: bold;
-    font-size: 20px
+    margin-bottom: 10px;
+    font-size: 20px;
     padding: 5px;
 }
 
@@ -147,7 +190,7 @@ hr {
 .content {
     font-size: 20px;
     display: block;
-    word-break: break-all;
+    word-break: break-word;
     white-space: pre-wrap;  /* 改行や空白を保ちつつ折り返す */
 }
 
@@ -159,7 +202,7 @@ hr {
     font-size: 20px;
     display: inline-block;
     vertical-align: top;
-    word-break: break-all;
+    word-break: break-word;
     white-space: pre-wrap;  /* 改行や空白を保ちつつ折り返す */
 }
 
@@ -220,6 +263,10 @@ hr {
     margin-left: -40px;
     height: 3em;
     width: 5em;
+}
+
+.hint {
+    color: gray;
 }
 
 .arrow {

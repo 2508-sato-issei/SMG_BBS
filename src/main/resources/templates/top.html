@@ -33,7 +33,7 @@
     <div class="menu">
         <nav>
             <ul>
-                <li><a th:href="@{#}">トップへ戻る</a></li>
+                <li><a th:href="@{#}">ページTOP</a></li>
                 <li><a th:href="@{/message/new}">新規投稿</a></li>
                 <li th:if="${isShowButton}"><a th:href="@{/user/management}">ユーザー管理画面</a></li>
             </ul>
@@ -109,7 +109,8 @@
                         <div class="form-area">
                             <div th:if="${errorId == message.id}" class="errorMessages" th:text="${commentErrorMessage}"></div>
                             <textarea th:if="${errorId == message.id}" class="text-box" th:field="*{text}" ></textarea>
-                            <textarea th:unless="${errorId == message.id}" class="text-box" th:field="*{text}"></textarea><br /><br />
+                            <textarea th:unless="${errorId == message.id}" class="text-box" th:field="*{text}"></textarea><br />
+                            <span class="hint">(500文字以内)</span><br />
                             <input type="submit" value="返信" />
                         </div>
                     </details>
