@@ -62,8 +62,9 @@ hr {
     positon: fixed;
     top:0;
     left:0;
-    padding: 5px;
+    vertical-align: inherit;
     font-size: 20px;
+    line-height: 2.5;
     background-color: #696969;
 }
 
@@ -111,12 +112,21 @@ hr {
 }
 
 .user-info {
-    text-align:center;
+    text-align: center;
+    padding-bottom: 20px;
 }
 
 .user-table {
     margin: auto;
+    width: 800px;
     background-color: white;
+}
+
+.title {
+    text-align: left;
+    font-weight: bold;
+    font-size: 20px
+    padding: 5px;
 }
 
 .message-icon {
@@ -125,6 +135,7 @@ hr {
     padding: 10px;
     border-radius: 20px
 }
+
 .content {
     font-size: 20px;
     display: block;
@@ -183,7 +194,7 @@ hr {
 
 .footer-contents {
 	margin-left: 10%;
-
+    position: relative;
 }
 
 .registration-button {
@@ -195,7 +206,12 @@ hr {
 }
 
 .management-return {
-    margin-left: 20%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-left: -40px;
+    height: 3em;
+    width: 5em;
 }
 
 .arrow {
@@ -224,4 +240,84 @@ hr {
 
 .arrow::after {
   transform: rotate(-45deg);
+}
+
+.td-edit {
+    vertical-align: inherit;
+    text-align: -internal-center;
+    width: 50px;
+}
+
+.td-idAccount {
+    vertical-align: inherit;
+    text-align: -internal-center;
+    width: 150px;
+}
+
+.td-name {
+    vertical-align: inherit;
+    text-align: -internal-center;
+    width: 150px;
+}
+
+.td-department {
+    vertical-align: inherit;
+    text-align: -internal-center;
+    width: 150px;
+}
+
+.td-date {
+    vertical-align: inherit;
+    text-align: -internal-center;
+    width: 200px;
+}
+
+.td-status {
+    vertical-align: inherit;
+    height: 70px;
+    width: 110px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    position: relative;
+}
+
+.valid-status {
+    grid-row: 1 / 3;
+    grid-column: 1;
+    display: grid;
+    align-items: center;
+    background-color: #CDE6C7;
+}
+
+.stop-status {
+    grid-row: 1 / 3;
+    grid-column: 1;
+    display: grid;
+    align-items: center;
+    background-color: #E6C9C7;
+}
+
+.valid-button {
+    grid-row: 1;
+    grid-column: 2;
+    margin: 5px;
+}
+
+.valid-button input {
+    background-color: #CDE6C7;
+}
+
+.stop-button {
+    grid-row: 2;
+    grid-column: 2;
+    margin: 5px;
+}
+
+.stop-button input {
+    background-color: #E6C9C7;
+}
+
+span.disable-change {
+    color: red;
 }

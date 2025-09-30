@@ -87,24 +87,18 @@
 
                 <!--返信フォーム-->
                 <form method="post" th:action="@{/comment/add/{id}(id=${message.id})}" th:object="${formModel}">
-                    <details th:if="${errorId == null}">
+                    <details th:open="${errorId != null}">
                         <summary>返信する</summary>
                         <!-- CSRFトークン -->
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                         <div class="form-area">
-                            <div th:if="${errorId == message.id}" class="errorMessages" th:text="${commentErrorMessage}"></div>
-                            <textarea class="text-box" th:field="*{text}"></textarea><br />
-                            <input type="submit" value="返信" />
-                        </div>
-                    </details>
-                    <details th:unless="${errorId == null}" open>
-                        <summary>返信する</summary>
-                        <!-- CSRFトークン -->
-                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                        <div class="form-area">
-                            <div th:if="${errorId == message.id}" class="errorMessages" th:text="${commentErrorMessage}"></div>
-                            <textarea th:if="${errorId == message.id}" class="text-box" th:field="*{text}" th:placeholder="${comment}"></textarea>
-                            <textarea th:unless="${errorId == message.id}" class="text-box" th:field="*{text}"></textarea><br /><br />
+                            <div th:if="${errorId == message.id}">
+                                <span class="errorMessages" th:text="${commentErrorMessage}"></span>
+                                <textarea class="text-box" th:field="*{text}"></textarea>
+                            </div>
+                            <div th:unless="${errorId == message.id}">
+                                <textarea class="text-box" th:field="*{text}"></textarea><br /><br />
+                            </div>
                             <input type="submit" value="返信" />
                         </div>
                     </details>
