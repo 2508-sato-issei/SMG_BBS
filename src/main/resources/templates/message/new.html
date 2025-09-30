@@ -34,12 +34,12 @@
             <div th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></div>
         </div>
         <div class="new-form-area">
-            <label>タイトル</label>
-            <textarea th:field="*{title}"></textarea>
-            <label>投稿内容</label>
+            <label>タイトル(30文字以内)</label>
+            <input type="text" size="30" th:field="*{title}"/>
+            <label>投稿内容(1000文字以内)</label>
             <textarea class="text-box" th:field="*{text}"></textarea>
-            <label>カテゴリ</label>
-            <textarea th:field="*{category}"></textarea><br />
+            <label>カテゴリ(10文字以内)</label>
+            <input type="text" th:field="*{category}"/><br/>
             <input class="registration-button" type="submit" value="登録"/>
         </div>
     </form>
