@@ -9,13 +9,13 @@ import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @Service
 public class MessageService {
@@ -25,14 +25,14 @@ public class MessageService {
     /*
      * 投稿取得＋絞り込み
      */
-    public List<UserMessageForm> findMessage(String startDate, String endDate, String category){
+    public List<UserMessageForm> findMessage(String startDate, String endDate, String category) {
         List<Message> results;
         Date date = new Date();
         DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         // 開始日の設定
         String startTime;
-        if(!StringUtils.isBlank(startDate)){
+        if (!StringUtils.isBlank(startDate)) {
             startTime = startDate + " 00:00:00";
         } else {
             startTime = "2022-01-01 00:00:00";
@@ -40,14 +40,18 @@ public class MessageService {
         Timestamp start = Timestamp.valueOf(startTime);
         // 終了日の設定
         String endTime;
-        if(!StringUtils.isBlank(endDate)){
+        if (!StringUtils.isBlank(endDate)) {
             endTime = endDate + " 23:59:59";
         } else {
             endTime = fmt.format(date);
         }
         Timestamp end = Timestamp.valueOf(endTime);
 
-        if(!StringUtils.isBlank(category)){
+        if (StringUtils.isBlank(startDate)
+                && StringUtils.isBlank(endDate)
+                && StringUtils.isBlank(category)) {
+            results = messageRepository.findAllByOrderByCreatedDateDesc();
+        } else if (!StringUtils.isBlank(category)) {
             results = messageRepository.findMessageByCategory(start, end, category);
         } else {
             //絞り込み(日付のみ)

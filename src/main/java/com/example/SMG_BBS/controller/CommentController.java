@@ -34,13 +34,10 @@ public class CommentController {
                                    RedirectAttributes redirectAttributes){
 
         if(result.hasErrors()){
-            String text = commentForm.getText();
             String errorMessage = "";
             for(ObjectError error : result.getAllErrors()){
                 errorMessage += error.getDefaultMessage();
             }
-
-            redirectAttributes.addFlashAttribute("comment", text);
             redirectAttributes.addFlashAttribute("commentErrorMessage", errorMessage);
             redirectAttributes.addFlashAttribute("errorId", messageId);
             redirectAttributes.addFlashAttribute("formModel", commentForm);

@@ -19,6 +19,7 @@ public class LoginUserDetails implements UserDetails {
     private final Integer id;
     private final String account;
     private final String password;
+    private final Integer branchId;
     private final Integer departmentId;
     private final Collection<? extends GrantedAuthority> authorities;
     private final User user;
@@ -27,6 +28,7 @@ public class LoginUserDetails implements UserDetails {
         this.id = user.getId();
         this.account = user.getAccount();
         this.password = user.getPassword();
+        this.branchId = user.getBranchId();
         this.departmentId = user.getDepartmentId();
         this.user = user;
 
